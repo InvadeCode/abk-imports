@@ -82,6 +82,14 @@ const injectStyles = () => (
       100% { transform: translateX(-50%); }
     }
 
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      animation: marquee 35s linear infinite;
+    }
+
     @keyframes spin-slow {
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
@@ -114,6 +122,18 @@ const injectStyles = () => (
       transform: translateX(-20px);
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       transition-delay: 0.1s;
+    }
+
+    /* LEAFLET CUSTOM TOOLTIP */
+    .leaflet-tooltip.custom-leaflet-tooltip {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 0;
+    }
+    .leaflet-container {
+      background-color: #050505 !important;
+      font-family: 'Inter', sans-serif;
     }
   `}</style>
 );
@@ -211,7 +231,7 @@ const Header = ({ onOpenMenu }) => {
   }, []);
 
   return (
-    <header className={`fixed top-0 w-full z-50 px-[3vw] py-6 flex justify-between items-center transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 py-4' : 'bg-transparent text-white'}`}>
+    <header className={`fixed top-0 w-full z-50 px-[3vw] py-6 flex justify-between items-center transition-all duration-500 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 py-4 shadow-sm' : 'bg-transparent text-white'}`}>
       <Magnetic strength={0.2}>
         <a href="#home" className="cursor-pointer block" data-cursor="hover">
           <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="ABK Imports Logo" className={`h-10 md:h-14 object-contain transition-all duration-500 ${scrolled ? '' : 'brightness-0 invert'}`} />
@@ -238,15 +258,13 @@ const SideMenu = ({ isOpen, onClose }) => {
         isOpen ? 'pointer-events-auto' : 'pointer-events-none'
       }`}
     >
-      {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-black/60 transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500 ${
           isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
         onClick={onClose}
       />
 
-      {/* Drawer */}
       <div
         className={`relative w-[100vw] md:w-[450px] h-full bg-[#111] text-white flex flex-col transition-transform duration-[0.8s] ease-[cubic-bezier(0.77,0,0.175,1)] shadow-2xl border-l border-white/10 ${
           isOpen ? 'translate-x-0 pointer-events-auto' : 'translate-x-full pointer-events-none'
@@ -262,10 +280,10 @@ const SideMenu = ({ isOpen, onClose }) => {
           <Magnetic>
             <button
               onClick={onClose}
-              className="p-2 hover:text-[#E60000] transition-colors"
+              className="p-2 hover:text-[#E60000] transition-colors bg-white/5 rounded-full"
               data-cursor="hover"
             >
-              <X size={32} strokeWidth={1} />
+              <X size={24} strokeWidth={1.5} />
             </button>
           </Magnetic>
         </div>
@@ -417,6 +435,35 @@ const Statistics = () => {
   );
 };
 
+const BrandMarquee = () => {
+  const brands = [
+    "ANDIS", "TROPICLEAN", "ORIJEN", "KONG", "PETKIN", 
+    "WAHL", "ROYAL CANIN", "FARMINA", "BEAPHAR", "FLEXI",
+    "ACANA", "EARTHBATH", "FURMINATOR", "SAVIC", "TRIXIE"
+  ];
+  
+  const scrollBrands = [...brands, ...brands];
+
+  return (
+    <section className="py-12 bg-white border-b border-gray-100 overflow-hidden relative flex items-center">
+      <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+      <div className="flex animate-marquee whitespace-nowrap items-center">
+        {scrollBrands.map((brand, i) => (
+          <div 
+            key={i} 
+            className="mx-10 text-3xl md:text-5xl font-heading font-black text-gray-200 hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none"
+            data-cursor="hover"
+          >
+            {brand}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
 const AboutUs = () => {
   const [activeTimeline, setActiveTimeline] = useState(0);
   const timelineData = [
@@ -452,7 +499,6 @@ const AboutUs = () => {
           </h2>
         </FadeUpReveal>
 
-        {/* Dynamic Journey Timeline & Hover Roadmap */}
         <div className="mb-32 flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
           <div className="w-full lg:w-1/2">
             <FadeUpReveal delayOffset={100}>
@@ -464,7 +510,6 @@ const AboutUs = () => {
                     onMouseEnter={() => setActiveTimeline(idx)} 
                     data-cursor="hover"
                   >
-                    {/* Perfected Center Alignment for Hollow Dots */}
                     <div className={`absolute top-2 left-[-13px] w-[24px] h-[24px] bg-[#FAFAFA] border-[4px] rounded-full transition-all duration-300 z-10 ${activeTimeline === idx ? 'border-[#E60000] scale-125' : 'border-[#CBD5E1] group-hover:border-[#E60000] group-hover:scale-110'}`} />
                     <h4 className={`text-5xl font-heading font-black transition-colors duration-300 mb-3 ${activeTimeline === idx ? 'text-[#E60000]' : 'text-[#CBD5E1] group-hover:text-[#E60000]'}`}>{item.year}</h4>
                     <p className={`text-lg transition-colors duration-300 max-w-md font-medium ${activeTimeline === idx ? 'text-gray-900' : 'text-gray-500'}`}>{item.text}</p>
@@ -474,7 +519,6 @@ const AboutUs = () => {
             </FadeUpReveal>
           </div>
 
-          {/* Fading Roadmap Image Panel */}
           <div className="w-full lg:w-1/2 h-[450px] md:h-[550px] relative radius-max overflow-hidden shadow-2xl mt-10 lg:mt-0">
              {timelineData.map((item, idx) => (
                <img 
@@ -497,7 +541,6 @@ const AboutUs = () => {
           </div>
         </div>
 
-        {/* Interactive SPIRIT Accordion */}
         <FadeUpReveal delayOffset={200}>
           <h3 className="text-2xl font-heading font-bold mb-8 uppercase tracking-widest">Our Core Values</h3>
           <div className="flex flex-col md:flex-row w-full h-[600px] md:h-[400px] gap-2 md:gap-4">
@@ -559,7 +602,6 @@ const BrandPortfolio = () => {
         ))}
       </div>
 
-      {/* In-House Brands Section */}
       <div className="px-[3vw] max-w-[1800px] mx-auto mt-20 border-t border-white/10 pt-20">
          <FadeUpReveal>
            <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter mb-12">HOME GROWN EXCELLENCE.</h2>
@@ -599,7 +641,12 @@ const ProductCatalogue = () => {
              </Magnetic>
           </div>
           <div className="w-full md:w-1/2 relative flex justify-center">
-             <img src="Screenshot 2026-06-08 at 12.44.26.jpg" alt="Product Catalogue" className="w-[80%] max-w-[500px] rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.5)] rotate-2 hover:rotate-0 transition-transform duration-700 object-cover" />
+             {/* Using a placeholder for the catalog image */}
+             <div className="w-[80%] max-w-[500px] aspect-[3/4] bg-white rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.5)] rotate-2 hover:rotate-0 transition-transform duration-700 flex flex-col items-center justify-center p-8 border-8 border-gray-100">
+                <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="Logo" className="w-32 mb-8 opacity-20" />
+                <h3 className="text-4xl font-heading font-black text-center text-gray-800">MASTER CATALOGUE</h3>
+                <div className="w-16 h-2 bg-[#E64C3C] mt-6"></div>
+             </div>
           </div>
        </div>
     </section>
@@ -607,54 +654,186 @@ const ProductCatalogue = () => {
 }
 
 const GlobalNetwork = () => {
+  const mapRef = useRef(null);
+  const mapInstance = useRef(null);
+  const [leafletLoaded, setLeafletLoaded] = useState(false);
+
+  useEffect(() => {
+    // Check if Leaflet is already present
+    if (window.L) {
+      setLeafletLoaded(true);
+      return;
+    }
+
+    // Inject Leaflet CSS
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(link);
+
+    // Inject Leaflet JS
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.async = true;
+    script.onload = () => {
+      setLeafletLoaded(true);
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup map instance on unmount to prevent errors in React StrictMode
+      if (mapInstance.current) {
+        mapInstance.current.remove();
+        mapInstance.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (leafletLoaded && mapRef.current && !mapInstance.current) {
+      const L = window.L;
+      
+      // Initialize map
+      const map = L.map(mapRef.current, {
+        center: [30, 10], // Centered between Europe, Asia, NA
+        zoom: 2,
+        zoomControl: false,
+        attributionControl: false,
+        scrollWheelZoom: false // Prevent page scroll hijacking
+      });
+
+      // Dark theme tiles (CartoDB Dark Matter)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      // Add Zoom Control manually to top right
+      L.control.zoom({ position: 'topright' }).addTo(map);
+
+      // Define Locations
+      const locations = [
+        { coords: [39.0997, -94.5786], title: 'North America Hub', desc: 'Sourcing: Premium Nutrition & Tools', type: 'hub' },
+        { coords: [51.5074, -0.1278], title: 'European Hub', desc: 'Sourcing: Lifestyle & Vet Care', type: 'hub' },
+        { coords: [22.3193, 114.1694], title: 'Asian Hub', desc: 'Sourcing: Innovative Accessories', type: 'hub' },
+        { coords: [18.5204, 73.8567], title: 'Pune, India', desc: 'Global Headquarters & Central Dist. Hub', type: 'hq' },
+        { coords: [28.7041, 77.1025], title: 'Delhi NCR', desc: 'Regional Distribution Hub', type: 'regional' },
+        { coords: [12.9716, 77.5946], title: 'Bangalore', desc: 'Regional Distribution Hub', type: 'regional' }
+      ];
+
+      // Add Markers
+      locations.forEach(loc => {
+        const isHQ = loc.type === 'hq';
+        const color = isHQ ? '#E60000' : (loc.type === 'hub' ? '#ffffff' : '#aaaaaa');
+        const size = isHQ ? 10 : (loc.type === 'hub' ? 6 : 4);
+        const pulseClass = isHQ ? 'animate-ping opacity-50 absolute inset-0 rounded-full' : '';
+
+        // Create a custom div icon for styling
+        const iconHtml = `
+          <div style="position: relative; width: ${size*2}px; height: ${size*2}px;">
+            ${isHQ ? `<div class="${pulseClass}" style="background-color: ${color};"></div>` : ''}
+            <div style="position: absolute; inset: 0; background-color: ${color}; border-radius: 50%; box-shadow: 0 0 10px ${color};"></div>
+          </div>
+        `;
+
+        const customIcon = L.divIcon({
+          className: 'custom-map-marker',
+          html: iconHtml,
+          iconSize: [size*2, size*2],
+          iconAnchor: [size, size]
+        });
+
+        const marker = L.marker(loc.coords, { icon: customIcon }).addTo(map);
+
+        // Bind custom tooltip for hover
+        marker.bindTooltip(`
+          <div style="background: rgba(17, 17, 17, 0.95); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); padding: 16px; border-radius: 12px; color: white; min-width: 200px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <p style="color: ${color}; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 4px 0;">${loc.type === 'hq' ? 'Headquarters' : 'Network Node'}</p>
+            <strong style="color: white; font-size: 16px; font-family: 'Montserrat', sans-serif; display: block; margin-bottom: 8px;">${loc.title}</strong>
+            <span style="font-size: 13px; color: #aaa; line-height: 1.4; display: block;">${loc.desc}</span>
+          </div>
+        `, {
+          direction: 'top',
+          offset: [0, -size],
+          className: 'custom-leaflet-tooltip'
+        });
+      });
+
+      mapInstance.current = map;
+    }
+  }, [leafletLoaded]);
+
   return (
     <section className="py-32 bg-[#050505] text-white relative overflow-hidden border-t border-white/10">
-      {/* Abstract World Map Background aligned lower */}
-      <div className="absolute top-20 left-0 right-0 bottom-0 opacity-15 pointer-events-none flex items-start justify-center overflow-hidden">
-        <img 
-          src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg" 
-          alt="World Map Graphic" 
-          className="w-[120%] max-w-none h-auto invert opacity-50 object-cover mt-20" 
-        />
-      </div>
-
-      <div className="px-[3vw] max-w-[1800px] mx-auto relative z-10">
+      
+      <div className="px-[3vw] max-w-[1800px] mx-auto relative z-20">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Global Footprint</span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-[5vw] font-heading font-extrabold tracking-tighter mb-8 leading-[1]">
+          <h2 className="text-4xl md:text-6xl lg:text-[5vw] font-heading font-extrabold tracking-tighter mb-12 leading-[1]">
             SOURCING WORLDWIDE.<br/>DELIVERING <span className="text-[#E60000]">PAN-INDIA.</span>
           </h2>
         </FadeUpReveal>
 
-        <div className="mt-20 md:mt-40 grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-16 relative">
+        {/* Interactive Leaflet Map Container */}
+        <FadeUpReveal delayOffset={100}>
+          <div 
+            className="w-full h-[50vh] md:h-[60vh] min-h-[400px] radius-max overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-10 bg-[#111]"
+            data-cursor="drag"
+          >
+            {leafletLoaded ? (
+              <div ref={mapRef} className="w-full h-full" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-500 font-mono text-sm">
+                Initializing Geospatial Data...
+              </div>
+            )}
+            
+            {/* Map Overlay Graphic / Legend */}
+            <div className="absolute bottom-6 left-6 z-[400] bg-black/60 backdrop-blur-md border border-white/10 rounded-xl p-4 pointer-events-none hidden md:block">
+               <h4 className="text-xs font-bold text-white uppercase tracking-widest mb-3">Network Legend</h4>
+               <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-3">
+                     <div className="w-3 h-3 bg-[#E60000] rounded-full shadow-[0_0_8px_#E60000]"></div>
+                     <span className="text-xs text-gray-300">Central HQ & Hub</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                     <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
+                     <span className="text-xs text-gray-300">Global Sourcing Node</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                     <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                     <span className="text-xs text-gray-300">Regional Distribution</span>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </FadeUpReveal>
+
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-16 relative">
           
           <FadeUpReveal delayOffset={100} className="relative">
-            <div className="w-4 h-4 bg-[#E60000] rounded-full shadow-[0_0_20px_#E60000] mb-8" />
             <h4 className="text-3xl font-heading font-bold mb-4">North America</h4>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">Partnering with industry titans in the USA and Canada to bring clinically proven nutrition, behavioral toys, and grooming tech to India.</p>
           </FadeUpReveal>
           
           <FadeUpReveal delayOffset={200} className="relative">
-            <div className="w-4 h-4 bg-[#E60000] rounded-full shadow-[0_0_20px_#E60000] mb-8" />
             <h4 className="text-3xl font-heading font-bold mb-4">Europe & UK</h4>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">Sourcing premium lifestyle accessories, specialized veterinary care products, and heritage grooming brands trusted globally.</p>
           </FadeUpReveal>
           
           <FadeUpReveal delayOffset={300} className="relative">
-            <div className="w-4 h-4 bg-[#E60000] rounded-full shadow-[0_0_20px_#E60000] mb-8" />
             <h4 className="text-3xl font-heading font-bold mb-4">Asian Markets</h4>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">Leveraging high-tech manufacturing hubs for innovative toys, smart pet accessories, and highly reliable daily care items.</p>
             
-            {/* Realignment of Central Dist. Hub pill matching image_cf02e6.png */}
             <div className="mt-8 inline-flex items-center gap-3 bg-[#1A1A1A]/80 border border-white/20 rounded-full px-5 py-2.5 backdrop-blur-md">
                 <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center relative">
-                    <div className="absolute inset-0 bg-white rounded-full animate-ping opacity-50" />
+                    <div className="absolute inset-0 bg-[#E60000] rounded-full animate-ping opacity-50" />
                     <div className="w-2 h-2 bg-[#E60000] rounded-full" />
                 </div>
-                <span className="text-[11px] font-bold tracking-widest uppercase text-white">Central Dist. Hub</span>
+                <span className="text-[11px] font-bold tracking-widest uppercase text-white">Pune Central Hub</span>
             </div>
           </FadeUpReveal>
 
@@ -673,7 +852,6 @@ const WhyChooseABK = () => {
 
   return (
     <section id="why-choose-abk" className="py-32 bg-[#F9F9F9] relative overflow-hidden bg-dots">
-      {/* Decorative Blob Graphic */}
       <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-white rounded-full blur-[100px] pointer-events-none" />
       
       <div className="px-[3vw] max-w-[1800px] mx-auto text-center mb-20 relative z-10">
@@ -688,7 +866,6 @@ const WhyChooseABK = () => {
          </FadeUpReveal>
       </div>
 
-      {/* Wide Infographic Grid Layout */}
       <div className="px-[3vw] max-w-[1800px] mx-auto relative">
         <div className="hidden md:block absolute top-[60px] left-[15%] right-[15%] h-[2px] bg-gradient-to-r from-transparent via-[#E60000]/20 to-transparent" />
         
@@ -726,7 +903,7 @@ const Testimonials = () => {
       <Star className="text-[#E60000] mb-10" size={48} fill="currentColor" />
       <div className="relative h-[250px] w-full max-w-4xl">
         {reviews.map((rev, idx) => (
-          <div key={idx} className={`absolute top-0 left-0 w-full transition-all duration-1000 ease-in-out ${active === idx ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div key={idx} className={`absolute top-0 left-0 w-full transition-all duration-1000 ease-in-out ${active === idx ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
             <h3 className="text-2xl md:text-4xl font-heading font-medium leading-relaxed mb-8">"{rev.text}"</h3>
             <p className="font-bold text-lg">{rev.author}</p>
             <p className="text-gray-500 uppercase tracking-widest text-sm mt-1">{rev.role}</p>
@@ -832,7 +1009,6 @@ const Footer = () => {
     <footer id="contact" className="bg-[#050505] text-white pt-24 pb-8 overflow-hidden">
       <div className="px-[3vw] flex flex-col lg:flex-row justify-between gap-16 lg:gap-24 mb-24 max-w-[1800px] mx-auto">
         <div className="max-w-[400px]">
-          {/* Logo Size Increased */}
           <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="ABK Imports Logo" className="h-14 md:h-[64px] mb-8 object-contain origin-left brightness-0 invert" />
           <p className="text-gray-400 font-light leading-relaxed mb-10 text-[15px]">India's premier import and distribution partner for global pet care brands. Elevating industry standards through superior supply chain management.</p>
           <div className="flex gap-4">
@@ -844,7 +1020,6 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Footer Layout Aligned to Image cf02cc */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 flex-1 lg:ml-20 mt-4 md:mt-0">
           <div>
             <h4 className="font-heading font-semibold mb-6 uppercase tracking-widest text-[11px] text-gray-500">DISTRIBUTION</h4>
@@ -868,7 +1043,6 @@ const Footer = () => {
               <h4 className="font-heading font-semibold mb-6 uppercase tracking-widest text-[11px] text-gray-500">NEWSLETTER</h4>
               <p className="text-gray-400 font-light text-[15px] mb-6">Subscribe for B2B<br className="hidden lg:block"/> industry insights.</p>
               
-              {/* FIXED: Absolutely Positioned Newsletter Field for strict screenshot accuracy */}
               <div className="relative w-full max-w-[350px]">
                 <input 
                   type="email" 
@@ -963,6 +1137,7 @@ export default function App() {
         <main>
           <Hero isReady={!loading} />
           <Statistics />
+          <BrandMarquee />
           <AboutUs />
           <BrandPortfolio />
           <GlobalNetwork />
