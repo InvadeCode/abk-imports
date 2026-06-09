@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowRight, Search, Menu, ShoppingBag, X, ChevronRight, ChevronLeft, ArrowUpRight, Star, Plus, Minus, Box, Truck, BarChart3, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Search, Menu, ShoppingBag, X, ChevronRight, ChevronLeft, ArrowUpRight, Star, Plus, Minus, Box, Truck, BarChart3, ShieldCheck, Zap, Users, GraduationCap, Megaphone, CheckCircle2, MapPin, Target, Briefcase, HeartHandshake, Coffee, Globe, FileText, CheckCircle, Award, Heart, BookOpen, Newspaper } from 'lucide-react';
 
 const injectStyles = () => (
   <style>{`
@@ -81,6 +81,9 @@ const injectStyles = () => (
     .animate-marquee { animation: marquee 80s linear infinite; }
     .animate-marquee-reverse { animation: marquee-reverse 80s linear infinite; }
     
+    @keyframes footer-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .animate-footer-marquee { animation: footer-marquee 20s linear infinite; }
+
     @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     .animate-spin-slow { animation: spin-slow 25s linear infinite; }
     
@@ -235,7 +238,7 @@ const Header = ({ onOpenMenu, scrolled }) => {
 };
 
 const SideMenu = ({ isOpen, onClose, navigateTo }) => {
-  const links = ['Home', 'About Us', 'Brand Portfolio', 'Why Choose ABK', 'Work With Us', 'Contact'];
+  const links = ['Home', 'About Us', 'Brand Portfolio', 'Why Choose ABK', 'Work With Us', 'Blogs', 'News & Insights', 'CSR & Experiences', 'Contact'];
 
   return (
     <div className={`fixed inset-0 z-[90000] flex justify-end ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
@@ -256,15 +259,15 @@ const SideMenu = ({ isOpen, onClose, navigateTo }) => {
 
         {/* Links with Float In/Out Animation */}
         <div className="flex-1 flex flex-col justify-center px-8 md:px-16 pb-8 overflow-y-auto">
-          <div className="flex flex-col gap-2 md:gap-4">
+          <div className="flex flex-col gap-1 md:gap-3">
             {links.map((link, i) => (
               <div key={link} className="overflow-hidden py-1">
                 <button
                   onClick={() => navigateTo(link)}
-                  className={`block text-3xl md:text-4xl lg:text-[44px] font-heading font-bold text-left hover:text-[#E60000] hover:translate-x-4 transition-all duration-[0.8s] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  className={`block text-2xl md:text-4xl lg:text-[40px] font-heading font-bold text-left hover:text-[#E60000] hover:translate-x-4 transition-all duration-[0.8s] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                     isOpen ? 'translate-y-0 opacity-100' : 'translate-y-[120%] opacity-0'
                   }`}
-                  style={{ transitionDelay: `${isOpen ? 200 + i * 80 : 0}ms`, lineHeight: '1.2' }}
+                  style={{ transitionDelay: `${isOpen ? 100 + i * 50 : 0}ms`, lineHeight: '1.1' }}
                   data-cursor="hover"
                 >
                   {link}
@@ -285,8 +288,36 @@ const SideMenu = ({ isOpen, onClose, navigateTo }) => {
   );
 };
 
+const InternalPageHero = ({ title, subtitle, bgImage, bgVideo }) => (
+  <div className="relative w-full h-[85vh] flex items-end pb-24 pt-32 px-[3vw] bg-[#050505] overflow-hidden">
+    <div className="absolute inset-0 z-0">
+      {bgVideo ? (
+         <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-50 grayscale-[30%]">
+           <source src={bgVideo} type="video/mp4" />
+         </video>
+      ) : (
+         bgImage && <img src={bgImage} alt="Hero Background" className="w-full h-full object-cover opacity-40 grayscale-[50%]" />
+      )}
+    </div>
+    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent" />
+    <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
+    
+    <div className="relative z-20 max-w-[1800px] mx-auto w-full text-left">
+      <FadeUpReveal>
+        <div className="w-12 h-[3px] bg-[#E60000] mb-8 shadow-[0_0_15px_#E60000]" />
+        <h1 className="text-5xl md:text-7xl lg:text-[8vw] font-heading font-black tracking-tighter mb-6 text-white leading-[0.9] max-w-5xl drop-shadow-2xl">
+          {title}
+        </h1>
+        <p className="text-xl md:text-3xl text-gray-300 font-light max-w-3xl leading-relaxed drop-shadow-md">
+          {subtitle}
+        </p>
+      </FadeUpReveal>
+    </div>
+  </div>
+);
+
 // ==========================================
-// BRAND DATABASE & DEDICATED BRAND PAGES
+// BRAND DATABASE
 // ==========================================
 
 const brandDatabase = {
@@ -337,104 +368,8 @@ const brandDatabase = {
   }
 };
 
-const BrandPage = ({ brandId }) => {
-  const brand = brandDatabase[brandId];
-  
-  if (!brand) return (
-    <div className="pt-32 text-center h-screen flex flex-col items-center justify-center bg-white">
-      <h1 className="text-4xl font-heading font-black text-[#111] mb-4">Brand not found.</h1>
-      <p className="text-gray-500">The requested brand data is not available in the current portfolio.</p>
-    </div>
-  );
-
-  return (
-    <div className="animate-slide-reveal bg-white">
-      <InternalPageHero 
-        title={<span>{brand.title}</span>} 
-        subtitle={brand.subtitle}
-        bgImage={brand.bgImage}
-        bgVideo={brand.bgVideo}
-      />
-      
-      <section className="py-24 px-[3vw] bg-[#FAFAFA] text-left border-b border-gray-100">
-        <div className="max-w-[1200px] mx-auto">
-          <FadeUpReveal>
-            <div className="flex items-center gap-3 mb-6">
-               <div className="w-10 h-[2px] bg-[#E60000]" />
-               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Brand Philosophy</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-8 leading-tight">{brand.description}</h2>
-          </FadeUpReveal>
-        </div>
-      </section>
-
-      <section className="py-32 px-[3vw] text-left">
-         <div className="max-w-[1800px] mx-auto">
-           <FadeUpReveal>
-              <div className="flex items-center gap-3 mb-6">
-                 <div className="w-10 h-[2px] bg-[#E60000]" />
-                 <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Product Lines</span>
-              </div>
-              <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">AVAILABLE <span className="text-[#E60000]">CATALOG.</span></h2>
-           </FadeUpReveal>
-
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {brand.products.map((product, idx) => (
-                <FadeUpReveal key={idx} delayOffset={idx * 150}>
-                   <div className="group border border-gray-100 radius-max p-6 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white" data-cursor="hover">
-                      <div className="w-full aspect-[4/3] radius-max overflow-hidden mb-6 relative bg-gray-50">
-                         <img src={product.img} alt={product.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                      </div>
-                      <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-2">{product.category}</p>
-                      <h4 className="text-2xl font-heading font-bold text-[#111] mb-3">{product.name}</h4>
-                      <p className="text-gray-500 text-sm leading-relaxed mb-6">{product.desc}</p>
-                      <button className="text-sm font-bold text-[#111] border-b-2 border-transparent group-hover:border-[#E60000] transition-colors pb-1 flex items-center gap-2 mt-auto">
-                        View Logistics Data <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                      </button>
-                   </div>
-                </FadeUpReveal>
-              ))}
-           </div>
-         </div>
-      </section>
-      <PreFooter />
-    </div>
-  );
-};
-
 // ==========================================
-// SHARED INTERNAL HERO (LARGER + VIDEO SUPPORT)
-// ==========================================
-const InternalPageHero = ({ title, subtitle, bgImage, bgVideo }) => (
-  <div className="relative w-full h-[85vh] flex items-end pb-24 pt-32 px-[3vw] bg-[#050505] overflow-hidden">
-    <div className="absolute inset-0 z-0">
-      {bgVideo ? (
-         <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-50 grayscale-[30%]">
-           <source src={bgVideo} type="video/mp4" />
-         </video>
-      ) : (
-         bgImage && <img src={bgImage} alt="Hero Background" className="w-full h-full object-cover opacity-40 grayscale-[50%]" />
-      )}
-    </div>
-    <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#050505] via-[#050505]/80 to-transparent" />
-    <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#050505] via-transparent to-transparent" />
-    
-    <div className="relative z-20 max-w-[1800px] mx-auto w-full text-left">
-      <FadeUpReveal>
-        <div className="w-12 h-[3px] bg-[#E60000] mb-8 shadow-[0_0_15px_#E60000]" />
-        <h1 className="text-5xl md:text-7xl lg:text-[8vw] font-heading font-black tracking-tighter mb-6 text-white leading-[0.9] max-w-5xl drop-shadow-2xl">
-          {title}
-        </h1>
-        <p className="text-xl md:text-3xl text-gray-300 font-light max-w-3xl leading-relaxed drop-shadow-md">
-          {subtitle}
-        </p>
-      </FadeUpReveal>
-    </div>
-  </div>
-);
-
-// ==========================================
-// HOME PAGE COMPONENTS
+// ALL INDIVIDUAL SECTIONS
 // ==========================================
 
 const Hero = ({ isReady }) => {
@@ -534,7 +469,6 @@ const Statistics = () => (
   </section>
 );
 
-// NEW: Interactive Split-Screen Hover Tailored Categories Section
 const TailoredSolutions = ({ navigateTo }) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const categories = [
@@ -546,7 +480,6 @@ const TailoredSolutions = ({ navigateTo }) => {
   return (
     <section className="py-32 bg-[#FAFAFA] relative px-[3vw]">
       <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
-         {/* Left Side: Typography & Interactions */}
          <div className="w-full lg:w-1/2 order-2 lg:order-1 flex flex-col justify-center text-left">
             <FadeUpReveal>
                <h2 className="text-5xl md:text-7xl lg:text-[5.5vw] font-heading font-black text-[#111] leading-[1.05] tracking-tighter mb-16">
@@ -558,7 +491,7 @@ const TailoredSolutions = ({ navigateTo }) => {
                   <div
                     key={idx}
                     onMouseEnter={() => setActiveIdx(idx)}
-                    onClick={() => navigateTo(cat.link)}
+                    onClick={() => navigateTo && navigateTo(cat.link)}
                     className={`cursor-pointer transition-all duration-500 border-l-[4px] pl-6 py-2 group ${activeIdx === idx ? 'border-[#E60000]' : 'border-gray-200 opacity-40 hover:opacity-70'}`}
                     data-cursor="hover"
                   >
@@ -572,7 +505,6 @@ const TailoredSolutions = ({ navigateTo }) => {
             </div>
          </div>
 
-         {/* Right Side: Image Canvas */}
          <div className="w-full lg:w-1/2 order-1 lg:order-2 h-[400px] lg:h-[700px] relative radius-max overflow-hidden shadow-2xl" data-cursor="hover">
             {categories.map((cat, idx) => (
                <img
@@ -587,9 +519,8 @@ const TailoredSolutions = ({ navigateTo }) => {
       </div>
     </section>
   );
-}
+};
 
-// NEW: Double row faint marquee slider
 const DoubleBrandMarquee = ({ navigateTo }) => {
   const row1 = [
     { label: "ANDIS", id: "Andis" },
@@ -620,19 +551,17 @@ const DoubleBrandMarquee = ({ navigateTo }) => {
       <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
       
-      {/* Row 1 (Left to Right) */}
       <div className="flex animate-marquee-reverse whitespace-nowrap items-center w-max">
         {scroll1.map((brand, i) => (
-          <div key={`row1-${i}`} onClick={() => navigateTo(`Brand: ${brand.id}`)} className="mx-6 text-5xl md:text-7xl lg:text-[7vw] leading-none font-heading font-black text-[#F2F2F2] hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none" data-cursor="hover">
+          <div key={`row1-${i}`} onClick={() => navigateTo && navigateTo(`Brand: ${brand.id}`)} className="mx-6 text-5xl md:text-7xl lg:text-[7vw] leading-none font-heading font-black text-[#F2F2F2] hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none" data-cursor="hover">
             {brand.label}
           </div>
         ))}
       </div>
 
-      {/* Row 2 (Right to Left) */}
       <div className="flex animate-marquee whitespace-nowrap items-center w-max">
         {scroll2.map((brand, i) => (
-          <div key={`row2-${i}`} onClick={() => navigateTo(`Brand: ${brand.id}`)} className="mx-6 text-5xl md:text-7xl lg:text-[7vw] leading-none font-heading font-black text-[#F2F2F2] hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none" data-cursor="hover">
+          <div key={`row2-${i}`} onClick={() => navigateTo && navigateTo(`Brand: ${brand.id}`)} className="mx-6 text-5xl md:text-7xl lg:text-[7vw] leading-none font-heading font-black text-[#F2F2F2] hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none" data-cursor="hover">
             {brand.label}
           </div>
         ))}
@@ -640,11 +569,6 @@ const DoubleBrandMarquee = ({ navigateTo }) => {
     </section>
   );
 };
-
-
-// ==========================================
-// SHARED SECTIONS
-// ==========================================
 
 const AboutUs = () => {
   const [activeTimeline, setActiveTimeline] = useState(0);
@@ -795,7 +719,7 @@ const ProductCatalogue = () => {
        </div>
     </section>
   );
-}
+};
 
 const WhyChooseABK = () => {
   const points = [
@@ -837,6 +761,183 @@ const WhyChooseABK = () => {
     </section>
   );
 };
+
+const ABKTechAdvantage = () => (
+  <section className="py-32 bg-white px-[3vw] text-left border-y border-gray-100">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
+       <div className="lg:w-1/2">
+         <FadeUpReveal>
+            <div className="flex items-center gap-3 mb-6">
+               <div className="w-10 h-[2px] bg-[#E60000]" />
+               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Tech Infrastructure</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-8 leading-tight">DATA-DRIVEN <br/><span className="text-[#E60000]">DISTRIBUTION.</span></h2>
+            <p className="text-gray-600 text-lg leading-relaxed mb-8">Our proprietary B2B portal goes beyond ordering. We provide our partners with actionable retail analytics, API-driven inventory syncing, and automated restocking triggers.</p>
+            <ul className="flex flex-col gap-4">
+              {['Real-time inventory mapping via custom dashboard', 'Automated purchase order generation', 'Predictive demand analytics tailored to your region'].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 text-[#111] font-bold">
+                   <CheckCircle2 size={20} className="text-[#E60000]" /> {item}
+                </li>
+              ))}
+            </ul>
+         </FadeUpReveal>
+       </div>
+       <div className="lg:w-1/2 w-full h-[400px] md:h-[500px] radius-max overflow-hidden relative shadow-2xl group" data-cursor="hover">
+         <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="Dashboard" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+       </div>
+    </div>
+  </section>
+);
+
+const AccountManagement = () => (
+  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+    <div className="max-w-[1800px] mx-auto">
+      <FadeUpReveal>
+        <div className="flex items-center gap-3 mb-6">
+           <div className="w-10 h-[2px] bg-[#E60000]" />
+           <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Partner Success</span>
+        </div>
+        <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">DEDICATED <span className="text-[#E60000]">SUPPORT.</span></h2>
+      </FadeUpReveal>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { icon: <Users size={32} />, title: "Regional Managers", desc: "A dedicated point of contact assigned to your specific geographical zone for rapid response and localized strategy." },
+          { icon: <Target size={32} />, title: "Quarterly Business Reviews", desc: "Strategic meetings to analyze your sell-through data, refine your inventory, and optimize your brand portfolio." },
+          { icon: <HeartHandshake size={32} />, title: "Priority Resolution", desc: "A streamlined B2B ticketing system ensuring any operational hurdles are resolved seamlessly within 24 hours." }
+        ].map((item, i) => (
+          <FadeUpReveal key={i} delayOffset={i * 100}>
+            <div className="bg-white p-10 radius-max border border-gray-100 hover:shadow-xl transition-all duration-300 h-full group" data-cursor="hover">
+              <div className="w-16 h-16 bg-[#FFF5F5] text-[#E60000] rounded-full flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">{item.icon}</div>
+              <h3 className="text-2xl font-heading font-bold text-[#111] mb-4">{item.title}</h3>
+              <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+            </div>
+          </FadeUpReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const QualityAssurance = () => (
+  <section className="py-32 bg-[#E60000] text-white px-[3vw] text-left">
+    <div className="max-w-[1800px] mx-auto text-center flex flex-col items-center">
+      <FadeUpReveal>
+         <ShieldCheck size={64} className="mb-8 mx-auto text-white/90" />
+         <h2 className="text-5xl md:text-7xl font-heading font-black tracking-tighter mb-8 leading-[1]">100% UNCOMPROMISED<br/>QUALITY CONTROL.</h2>
+         <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-12">From the manufacturer's facility to your storefront, we maintain an unbroken chain of custody. Every batch is tracked, every import is legally certified, and cold-chain integrity is strictly enforced.</p>
+         <div className="flex flex-wrap justify-center gap-4">
+            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">FSSAI Certified</span>
+            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">AQCS Cleared</span>
+            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">Legal Metrology Compliant</span>
+         </div>
+      </FadeUpReveal>
+    </div>
+  </section>
+);
+
+const OnboardingSteps = () => {
+  const steps = [
+    { num: "01", title: "Submit Application", desc: "Complete our B2B portal registration with your trade licenses." },
+    { num: "02", title: "Account Verification", desc: "Our compliance team validates your business within 24 hours." },
+    { num: "03", title: "Strategic Allocation", desc: "Your regional manager assigns pricing tiers and credit lines." },
+    { num: "04", title: "First Dispatch", desc: "Place your order via the portal with immediate warehouse dispatch." }
+  ];
+  return (
+    <section className="py-32 bg-white px-[3vw] text-left">
+      <div className="max-w-[1800px] mx-auto">
+         <FadeUpReveal>
+            <div className="flex items-center gap-3 mb-6">
+               <div className="w-10 h-[2px] bg-[#E60000]" />
+               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Getting Started</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">SEAMLESS <span className="text-[#E60000]">ONBOARDING.</span></h2>
+         </FadeUpReveal>
+         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+           {steps.map((step, i) => (
+             <FadeUpReveal key={i} delayOffset={i * 150}>
+                <div className="relative border-t-2 border-gray-100 pt-8 mt-12 md:mt-0 group hover:border-[#E60000] transition-colors" data-cursor="hover">
+                  <div className="absolute -top-[20px] left-0 bg-white pr-4">
+                    <span className="text-4xl font-heading font-black text-gray-200 group-hover:text-[#E60000] transition-colors">{step.num}</span>
+                  </div>
+                  <h3 className="text-xl font-heading font-bold text-[#111] mb-3 mt-4">{step.title}</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm">{step.desc}</p>
+                </div>
+             </FadeUpReveal>
+           ))}
+         </div>
+      </div>
+    </section>
+  );
+};
+
+const MarketingSupport = () => (
+  <section className="py-32 bg-[#111] text-white px-[3vw] text-left">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
+       <div className="lg:w-1/2 order-2 lg:order-1 h-[400px] md:h-[600px] w-full relative radius-max overflow-hidden" data-cursor="hover">
+         <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80" alt="Marketing" className="w-full h-full object-cover grayscale-[30%] hover:scale-105 transition-transform duration-1000" />
+       </div>
+       <div className="lg:w-1/2 order-1 lg:order-2">
+         <FadeUpReveal>
+            <div className="flex items-center gap-3 mb-6">
+               <div className="w-10 h-[2px] bg-[#E60000]" />
+               <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Growth Engine</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-heading font-black mb-8 leading-tight">DRIVING <span className="text-[#E60000]">SELL-THROUGH.</span></h2>
+            <p className="text-gray-300 text-lg leading-relaxed mb-10">We don't just put products on your shelves; we help you move them. Our retail partners gain exclusive access to a massive repository of marketing collateral and strategic support.</p>
+            <div className="grid grid-cols-2 gap-8">
+               {[
+                 { title: "Point of Sale", desc: "Premium physical displays and brand shelving." },
+                 { title: "Digital Assets", desc: "High-res images and social media toolkits." },
+                 { title: "Co-op Campaigns", desc: "Joint localized advertising initiatives." },
+                 { title: "Sampling", desc: "Strategic trial programs for new product launches." }
+               ].map((item, i) => (
+                 <div key={i} className="border-l-2 border-white/20 pl-4 hover:border-[#E60000] transition-colors cursor-default" data-cursor="hover">
+                    <h4 className="text-lg font-bold mb-2 text-[#E60000]">{item.title}</h4>
+                    <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+                 </div>
+               ))}
+            </div>
+         </FadeUpReveal>
+       </div>
+    </div>
+  </section>
+);
+
+const RetailerResources = () => (
+  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
+       <div className="lg:w-1/2">
+         <FadeUpReveal>
+            <div className="flex items-center gap-3 mb-6">
+               <div className="w-10 h-[2px] bg-[#E60000]" />
+               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">ABK Academy</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-8 leading-tight">EMPOWERING <br/><span className="text-[#E60000]">YOUR STAFF.</span></h2>
+            <p className="text-gray-600 text-lg leading-relaxed mb-10">Knowledge drives sales. We provide comprehensive, ongoing training for your staff to ensure they confidently recommend the right products to pet parents.</p>
+            <div className="space-y-8">
+               <div className="flex items-start gap-5 group cursor-default" data-cursor="hover">
+                 <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#E60000] shadow-sm shrink-0 group-hover:scale-110 transition-transform"><GraduationCap size={24} /></div>
+                 <div>
+                   <h4 className="font-heading font-bold text-[#111] text-xl">Product Certifications</h4>
+                   <p className="text-gray-500 text-base mt-2 leading-relaxed">Virtual modules covering ingredient profiles, nutritional science, and clinical benefits.</p>
+                 </div>
+               </div>
+               <div className="flex items-start gap-5 group cursor-default" data-cursor="hover">
+                 <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#E60000] shadow-sm shrink-0 group-hover:scale-110 transition-transform"><Megaphone size={24} /></div>
+                 <div>
+                   <h4 className="font-heading font-bold text-[#111] text-xl">Grooming Masterclasses</h4>
+                   <p className="text-gray-500 text-base mt-2 leading-relaxed">On-site hardware training and maintenance seminars led by industry master groomers.</p>
+                 </div>
+               </div>
+            </div>
+         </FadeUpReveal>
+       </div>
+       <div className="lg:w-1/2 w-full h-[400px] md:h-[600px] radius-max overflow-hidden relative shadow-xl" data-cursor="hover">
+         <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&w=1200&q=80" alt="Training" className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" />
+       </div>
+    </div>
+  </section>
+);
 
 const InteractiveROICalculator = () => {
   const [clients, setClients] = useState(150);
@@ -1194,7 +1295,109 @@ const WorkWithUs = () => {
       </div>
     </section>
   );
-}
+};
+
+const BrandSpotlight = ({ navigateTo }) => (
+  <section className="py-32 bg-[#111] text-white px-[3vw] text-left">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
+      <div className="lg:w-1/2">
+        <FadeUpReveal>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-[2px] bg-[#E60000]" />
+            <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Brand Spotlight</span>
+          </div>
+          <h2 className="text-5xl md:text-7xl font-heading font-black mb-8 leading-[1]">ANDIS<br/><span className="text-gray-500">PRO.</span></h2>
+          <p className="text-xl text-gray-300 leading-relaxed mb-8 max-w-xl">As the exclusive national distributor for Andis, we empower Indian grooming professionals with world-class clipping and trimming technology built for precision.</p>
+          <div className="flex gap-12 mb-10">
+            <div>
+              <p className="text-4xl font-heading font-bold text-[#E60000]">10k+</p>
+              <p className="text-xs uppercase tracking-widest text-gray-500 mt-2">Salons Equipped</p>
+            </div>
+            <div>
+              <p className="text-4xl font-heading font-bold text-[#E60000]">100%</p>
+              <p className="text-xs uppercase tracking-widest text-gray-500 mt-2">Authentic Spares</p>
+            </div>
+          </div>
+          <Magnetic>
+            <button onClick={() => navigateTo('Brand: Andis')} className="border border-white/30 text-white px-8 py-4 radius-max font-bold hover:bg-white hover:text-black transition-colors" data-cursor="hover">View Andis Catalog</button>
+          </Magnetic>
+        </FadeUpReveal>
+      </div>
+      <div className="lg:w-1/2 h-[500px] lg:h-[700px] w-full relative radius-max overflow-hidden" data-cursor="hover">
+        <img src="https://images.unsplash.com/photo-1585559606675-01e141a02fb4?auto=format&fit=crop&w=1200&q=80" alt="Andis" className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-[1.5s] grayscale-[20%]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#111]/80 via-transparent to-transparent pointer-events-none" />
+      </div>
+    </div>
+  </section>
+);
+
+const NewArrivals = () => {
+  const arrivals = [
+    { name: "Earthbath", category: "Grooming", desc: "Totally natural pet care & shampoos.", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=600&q=80" },
+    { name: "Ruffwear", category: "Outdoor", desc: "Performance dog gear and apparel.", img: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=600&q=80" },
+    { name: "Nylabone", category: "Toys", desc: "Durable chew toys & dental solutions.", img: "https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=600&q=80" },
+  ];
+  return (
+    <section className="py-32 bg-[#FAFAFA] px-[3vw]">
+       <div className="max-w-[1800px] mx-auto text-left">
+          <FadeUpReveal>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-[2px] bg-[#E60000]" />
+              <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Just Landed</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">NEW ARRIVALS.</h2>
+          </FadeUpReveal>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {arrivals.map((brand, i) => (
+              <FadeUpReveal key={i} delayOffset={i*150}>
+                <div className="group cursor-pointer bg-white p-6 radius-max border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-cursor="hover">
+                  <div className="w-full aspect-[4/3] overflow-hidden radius-max mb-6 relative">
+                    <div className="absolute top-4 left-4 z-20 bg-[#E60000] text-white px-4 py-1.5 radius-max text-[10px] font-bold uppercase tracking-widest shadow-md">New</div>
+                    <img src={brand.img} alt={brand.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                  </div>
+                  <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-2">{brand.category}</p>
+                  <h4 className="text-2xl font-heading font-bold text-[#111] mb-2">{brand.name}</h4>
+                  <p className="text-gray-500">{brand.desc}</p>
+                </div>
+              </FadeUpReveal>
+            ))}
+          </div>
+       </div>
+    </section>
+  )
+};
+
+const SelectionCriteria = () => {
+  const criteria = [
+    { title: "Clinical Efficacy", desc: "Every nutritional and wellness product is stringently vetted by our panel of veterinary experts to ensure true health benefits." },
+    { title: "Ethical Sourcing", desc: "We prioritize partnerships with brands deeply committed to sustainable manufacturing and cruelty-free testing methodologies." },
+    { title: "Market Viability", desc: "Rigorous market analysis ensures every brand we introduce strongly resonates with the evolving needs of Indian pet parents." }
+  ];
+  return (
+     <section className="py-32 bg-white px-[3vw]">
+        <div className="max-w-[1800px] mx-auto text-left">
+          <FadeUpReveal>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-[2px] bg-[#E60000]" />
+              <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Curation Process</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-20 max-w-4xl">HOW WE SELECT <span className="text-[#E60000]">OUR PARTNERS.</span></h2>
+          </FadeUpReveal>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24">
+             {criteria.map((item, i) => (
+               <FadeUpReveal key={i} delayOffset={i * 150}>
+                 <div className="border-t border-gray-200 pt-10" data-cursor="hover">
+                   <h4 className="text-6xl font-heading font-black text-gray-100 mb-8 transition-colors group-hover:text-[#E60000]">0{i+1}</h4>
+                   <h3 className="text-2xl font-heading font-bold text-[#111] mb-4">{item.title}</h3>
+                   <p className="text-gray-600 leading-relaxed text-lg">{item.desc}</p>
+                 </div>
+               </FadeUpReveal>
+             ))}
+          </div>
+        </div>
+     </section>
+  );
+};
 
 const OurMissionVision = () => (
   <section className="py-32 px-[3vw] bg-white text-left">
@@ -1367,10 +1570,457 @@ const AwardsAndRecognitions = () => {
   );
 };
 
+const CompanyCulture = () => (
+  <section className="py-32 bg-white px-[3vw] text-left">
+    <div className="max-w-[1800px] mx-auto">
+      <FadeUpReveal className="mb-16">
+         <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-[2px] bg-[#E60000]" />
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Life at ABK</span>
+         </div>
+         <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-6">DRIVEN BY <span className="text-[#E60000]">PASSION.</span></h2>
+         <p className="text-gray-600 text-xl max-w-3xl leading-relaxed">We are a collective of pet enthusiasts, supply chain experts, and brand builders. Our culture is rooted in continuous learning, radical ownership, and a shared mission to elevate animal welfare globally.</p>
+      </FadeUpReveal>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[400px]">
+         <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover radius-max shadow-md" alt="Office" />
+         <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover radius-max shadow-md md:-translate-y-8" alt="Team" />
+         <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover radius-max shadow-md" alt="Collaboration" />
+      </div>
+    </div>
+  </section>
+);
 
-// ----------------------------------------------------
+const EmployeeBenefits = () => (
+  <section className="py-32 bg-[#050505] text-white px-[3vw] text-left relative overflow-hidden">
+    <div className="max-w-[1800px] mx-auto relative z-10">
+      <FadeUpReveal>
+         <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-[2px] bg-[#E60000]" />
+            <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Perks & Rewards</span>
+         </div>
+         <h2 className="text-4xl md:text-6xl font-heading font-black mb-16">WHY JOIN <span className="text-[#E60000]">OUR TEAM.</span></h2>
+      </FadeUpReveal>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+         {[
+           { icon: <Coffee />, title: "Pet-Friendly HQ", desc: "Bring your furry best friend to work. Our offices are designed for pets." },
+           { icon: <ShieldCheck />, title: "Comprehensive Care", desc: "Top-tier health, dental, and vision insurance for you and your family." },
+           { icon: <Globe />, title: "Remote Flexibility", desc: "Hybrid work structures giving you the freedom to work where you thrive." },
+           { icon: <GraduationCap />, title: "Growth Stipend", desc: "Annual budgets dedicated to your professional development and courses." }
+         ].map((benefit, i) => (
+           <FadeUpReveal key={i} delayOffset={i * 100}>
+             <div className="bg-[#111] p-8 radius-max border border-white/10 hover:border-[#E60000] transition-colors h-full">
+                <div className="text-[#E60000] mb-6">{benefit.icon}</div>
+                <h3 className="text-xl font-heading font-bold mb-3">{benefit.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{benefit.desc}</p>
+             </div>
+           </FadeUpReveal>
+         ))}
+      </div>
+    </div>
+  </section>
+);
+
+const OpenPositions = () => {
+  const jobs = [
+    { title: "Regional Sales Manager", dept: "Sales", loc: "Bangalore, India", type: "Full-Time" },
+    { title: "Supply Chain Analyst", dept: "Operations", loc: "Pune, India", type: "Full-Time" },
+    { title: "B2B Marketing Specialist", dept: "Marketing", loc: "Remote", type: "Full-Time" },
+    { title: "Key Account Executive", dept: "Sales", loc: "Delhi NCR", type: "Full-Time" }
+  ];
+  return (
+    <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+      <div className="max-w-[1200px] mx-auto">
+        <FadeUpReveal>
+           <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-[2px] bg-[#E60000]" />
+              <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Opportunities</span>
+           </div>
+           <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-12">OPEN <span className="text-[#E60000]">ROLES.</span></h2>
+        </FadeUpReveal>
+        <div className="flex flex-col gap-4">
+          {jobs.map((job, i) => (
+            <FadeUpReveal key={i} delayOffset={i * 100}>
+              <div className="bg-white border border-gray-200 radius-max p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition-all duration-300 group cursor-pointer" data-cursor="hover">
+                <div>
+                  <h3 className="text-2xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors mb-2">{job.title}</h3>
+                  <div className="flex flex-wrap gap-4 text-sm font-medium text-gray-500 uppercase tracking-widest">
+                    <span className="flex items-center gap-1"><Briefcase size={14}/> {job.dept}</span>
+                    <span className="flex items-center gap-1"><MapPin size={14}/> {job.loc}</span>
+                  </div>
+                </div>
+                <button className="mt-6 md:mt-0 bg-[#111] text-white px-8 py-3 radius-max font-bold text-sm group-hover:bg-[#E60000] transition-colors">Apply Now</button>
+              </div>
+            </FadeUpReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const PartnerApplicationProcess = () => (
+  <section className="py-32 bg-white px-[3vw] text-left border-b border-gray-100">
+    <div className="max-w-[1800px] mx-auto">
+      <FadeUpReveal>
+         <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-[2px] bg-[#E60000]" />
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">For Global Brands</span>
+         </div>
+         <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">BECOME A <span className="text-[#E60000]">DISTRIBUTION PARTNER.</span></h2>
+      </FadeUpReveal>
+      <div className="flex flex-col lg:flex-row gap-12">
+        {[
+          { step: "01", title: "Submit Brand Dossier", desc: "Provide your brand guidelines, clinical data, and target demographic analysis for the Indian market." },
+          { step: "02", title: "Compliance Audit", desc: "Our legal team verifies your formulations and manufacturing standards against Indian regulatory frameworks." },
+          { step: "03", title: "Launch Strategy", desc: "We co-develop a go-to-market strategy, integrating your brand into our pan-India logistics network." }
+        ].map((item, i) => (
+          <FadeUpReveal key={i} delayOffset={i * 150} className="flex-1">
+             <div className="border-l-4 border-gray-100 pl-8 hover:border-[#E60000] transition-colors py-4">
+                <h4 className="text-5xl font-heading font-black text-gray-200 mb-4">{item.step}</h4>
+                <h3 className="text-xl font-heading font-bold text-[#111] mb-3">{item.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+             </div>
+          </FadeUpReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const SupplierStandards = () => (
+  <section className="py-32 bg-[#E60000] text-white px-[3vw] text-left">
+    <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row gap-16 items-center">
+      <div className="md:w-1/2">
+        <FadeUpReveal>
+           <h2 className="text-5xl md:text-7xl font-heading font-black tracking-tighter mb-8 leading-[0.9]">UNCOMPROMISING<br/>STANDARDS.</h2>
+           <p className="text-white/90 text-lg max-w-lg leading-relaxed mb-8">We expect our global partners to adhere to the highest ethical and manufacturing standards. ABK Imports maintains a zero-tolerance policy for unethical sourcing, unsustainable manufacturing, or unverified clinical claims.</p>
+           <Magnetic>
+             <button className="border border-white/50 px-8 py-4 radius-max text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-[#E60000] transition-colors" data-cursor="hover">Read Supplier Code of Conduct</button>
+           </Magnetic>
+        </FadeUpReveal>
+      </div>
+      <div className="md:w-1/2 grid grid-cols-2 gap-4">
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80" className="w-full h-48 md:h-64 object-cover radius-max opacity-80 mix-blend-multiply" alt="Lab" />
+        <img src="https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&w=600&q=80" className="w-full h-48 md:h-64 object-cover radius-max mt-8 opacity-80 mix-blend-multiply" alt="Research" />
+      </div>
+    </div>
+  </section>
+);
+
+const WorkspaceGallery = () => {
+  const images = [
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1524143986875-3b098d78b363?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+    "https://images.unsplash.com/photo-1556761175-5973dc0f32d7?auto=format&fit=crop&w=800&q=80",
+  ];
+  return (
+    <section className="py-24 bg-white overflow-hidden text-left border-y border-gray-100">
+       <div className="px-[3vw] mb-12 max-w-[1800px] mx-auto">
+         <FadeUpReveal>
+            <h2 className="text-3xl font-heading font-black text-[#111]">INSIDE ABK.</h2>
+         </FadeUpReveal>
+       </div>
+       <div className="flex animate-marquee whitespace-nowrap gap-6 w-max px-[3vw]">
+          {[...images, ...images].map((img, i) => (
+            <div key={i} className="w-[300px] md:w-[500px] h-[200px] md:h-[350px] radius-max overflow-hidden shrink-0" data-cursor="drag">
+              <img src={img} alt="Workspace" className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 grayscale-[20%] hover:grayscale-0" />
+            </div>
+          ))}
+       </div>
+    </section>
+  );
+};
+
+const ContactLocations = () => (
+  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+    <div className="max-w-[1800px] mx-auto">
+      <FadeUpReveal>
+        <div className="flex items-center gap-3 mb-6">
+           <div className="w-10 h-[2px] bg-[#E60000]" />
+           <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Our Network</span>
+        </div>
+        <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">REGIONAL <span className="text-[#E60000]">HUBS.</span></h2>
+      </FadeUpReveal>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { city: "Pune (HQ)", role: "Global Operations & Central Dist.", address: "Gera Imperium Alpha, Kharadi, Pune, Maharashtra 411014" },
+          { city: "Delhi NCR", role: "North India Regional Hub", address: "Logistics Park, Sector 8, Manesar, Haryana 122051" },
+          { city: "Bangalore", role: "South India Regional Hub", address: "Tech Park, Electronic City Phase 1, Bangalore, Karnataka 560100" }
+        ].map((loc, i) => (
+          <FadeUpReveal key={i} delayOffset={i * 100}>
+            <div className="bg-white p-8 md:p-10 radius-max border border-gray-200 hover:shadow-xl hover:border-[#E60000] transition-all duration-300 group h-full flex flex-col" data-cursor="hover">
+              <div className="w-12 h-12 bg-[#FFF5F5] rounded-full flex items-center justify-center text-[#E60000] mb-6 group-hover:scale-110 transition-transform"><MapPin size={24} /></div>
+              <h3 className="text-2xl font-heading font-bold text-[#111] mb-2">{loc.city}</h3>
+              <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-4">{loc.role}</p>
+              <p className="text-gray-600 leading-relaxed mt-auto">{loc.address}</p>
+            </div>
+          </FadeUpReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const SupportMatrix = () => (
+  <section className="py-32 bg-white px-[3vw] text-left border-b border-gray-100">
+    <div className="max-w-[1800px] mx-auto">
+      <FadeUpReveal>
+        <div className="flex items-center gap-3 mb-6">
+           <div className="w-10 h-[2px] bg-[#E60000]" />
+           <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Directory</span>
+        </div>
+        <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">DEPARTMENT <span className="text-[#E60000]">ROUTING.</span></h2>
+      </FadeUpReveal>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { icon: <Truck size={28}/>, name: "Supply Chain & Logistics", email: "logistics@abkimports.com", phone: "+91 800 555 0199" },
+          { icon: <Briefcase size={28}/>, name: "Sales & New Partnerships", email: "sales@abkimports.com", phone: "+91 800 555 0198" },
+          { icon: <FileText size={28}/>, name: "Accounts & Billing", email: "billing@abkimports.com", phone: "+91 800 555 0197" }
+        ].map((dept, i) => (
+          <FadeUpReveal key={i} delayOffset={i * 100}>
+            <div className="border-l-4 border-gray-100 pl-8 py-2 hover:border-[#E60000] transition-colors group" data-cursor="hover">
+              <div className="text-gray-300 group-hover:text-[#E60000] transition-colors mb-4">{dept.icon}</div>
+              <h3 className="text-xl font-heading font-bold text-[#111] mb-4">{dept.name}</h3>
+              <p className="text-gray-600 mb-1">{dept.email}</p>
+              <p className="text-gray-600 font-mono text-sm">{dept.phone}</p>
+            </div>
+          </FadeUpReveal>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const LiveSupport = () => (
+  <section className="py-24 bg-[#E60000] text-white px-[3vw] text-center">
+    <div className="max-w-[1200px] mx-auto flex flex-col items-center">
+      <FadeUpReveal>
+        <Zap size={48} className="mb-8 mx-auto text-white/90" />
+        <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter mb-6 leading-tight">24/7 PARTNER SUPPORT.</h2>
+        <p className="text-xl text-white/90 leading-relaxed mb-10 max-w-2xl mx-auto">Existing B2B partners have round-the-clock access to our emergency logistics and technical support hotlines to ensure zero downtime in your retail operations.</p>
+        <Magnetic>
+          <button className="bg-white text-[#E60000] px-10 py-5 radius-max font-bold text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-colors" data-cursor="hover">Access Live Portal Support</button>
+        </Magnetic>
+      </FadeUpReveal>
+    </div>
+  </section>
+);
+
+const FacilityTour = () => (
+  <section className="py-32 bg-[#111] text-white px-[3vw] text-left overflow-hidden relative">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row items-center gap-16">
+       <div className="lg:w-1/2 w-full h-[400px] md:h-[600px] radius-max overflow-hidden relative" data-cursor="drag">
+         <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80" alt="Facility Tour" className="w-full h-full object-cover grayscale-[30%] hover:scale-105 transition-transform duration-1000" />
+       </div>
+       <div className="lg:w-1/2">
+         <FadeUpReveal>
+            <div className="flex items-center gap-3 mb-6">
+               <div className="w-10 h-[2px] bg-[#E60000]" />
+               <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Experience Scale</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-heading font-black mb-8 leading-tight">BOOK A <span className="text-[#E60000]">FACILITY TOUR.</span></h2>
+            <p className="text-gray-300 text-lg leading-relaxed mb-8 max-w-xl">We invite our premier partners to walk the floor of our 150,000 sq ft climate-controlled Central Distribution Hub in Pune. Witness our automated fulfillment engine firsthand.</p>
+            <button className="border border-white/30 text-white px-8 py-4 radius-max text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center gap-3 w-max" data-cursor="hover">Schedule Visit <ArrowRight size={18} /></button>
+         </FadeUpReveal>
+       </div>
+    </div>
+  </section>
+);
+
+const WholesaleFastTrack = () => (
+  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left bg-dots">
+    <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+      <div className="md:w-1/2">
+        <FadeUpReveal>
+          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-6 leading-tight">ENTERPRISE <br/><span className="text-[#E60000]">FAST-TRACK.</span></h2>
+          <p className="text-gray-600 text-lg leading-relaxed mb-8 max-w-lg">For national retail chains, veterinary hospitals, and bulk distributors. Skip the standard onboarding queue and connect directly with our Enterprise Strategy Directors.</p>
+        </FadeUpReveal>
+      </div>
+      <div className="md:w-1/2 w-full">
+        <FadeUpReveal delayOffset={100}>
+          <div className="bg-white p-10 md:p-14 radius-max shadow-2xl border border-gray-100 text-center flex flex-col items-center group cursor-pointer" data-cursor="hover">
+            <Award size={48} className="text-[#E60000] mb-6 group-hover:scale-110 transition-transform" />
+            <h3 className="text-3xl font-heading font-bold text-[#111] mb-4">Request VIP Onboarding</h3>
+            <p className="text-gray-500 mb-8 max-w-sm">Requires a minimum initial procurement value of ₹50,00,000 for eligibility.</p>
+            <button className="bg-[#111] text-white px-10 py-5 radius-max font-bold text-sm uppercase tracking-widest hover:bg-[#E60000] transition-colors w-full">Initiate Enterprise Request</button>
+          </div>
+        </FadeUpReveal>
+      </div>
+    </div>
+  </section>
+);
+
+const PartnerQuickLink = () => (
+  <section className="py-24 bg-white px-[3vw] text-center border-t border-gray-100">
+    <FadeUpReveal>
+      <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#111] mb-6">Already part of the network?</h2>
+      <p className="text-gray-500 mb-8 max-w-xl mx-auto">Access real-time inventory, manage orders, and connect with your account manager through the digital hub.</p>
+      <Magnetic>
+        <button className="bg-transparent border-2 border-[#111] text-[#111] px-10 py-4 radius-max font-bold hover:bg-[#111] hover:text-white transition-colors uppercase tracking-widest text-sm" data-cursor="hover">Log In to B2B Portal</button>
+      </Magnetic>
+    </FadeUpReveal>
+  </section>
+);
+
+const BlogGrid = () => {
+  const blogs = [
+    { category: "Nutrition", title: "Decoding the Biologically Appropriate Diet", desc: "Understanding the evolutionary science behind raw and freeze-dried protein formulations for canines.", readTime: "5 Min Read", img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80" },
+    { category: "Grooming", title: "Mastering the Perfect Shear", desc: "A guide for professional groomers on selecting and maintaining carbon-infused steel shears.", readTime: "8 Min Read", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80" },
+    { category: "Wellness", title: "Dental Health: The Unseen Pillar of Pet Care", desc: "Why passive dental care solutions like water additives are changing the game in preventative pet health.", readTime: "4 Min Read", img: "https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=800&q=80" },
+    { category: "Business", title: "Optimizing Your Retail Shelf Space", desc: "Merchandising strategies proven to increase basket sizes and customer retention in pet boutiques.", readTime: "10 Min Read", img: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80" },
+  ];
+
+  return (
+    <section className="py-32 bg-white px-[3vw] text-left">
+      <div className="max-w-[1800px] mx-auto">
+        <FadeUpReveal>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-[2px] bg-[#E60000]" />
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Articles & Guides</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">LATEST <span className="text-[#E60000]">POSTS.</span></h2>
+        </FadeUpReveal>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          {blogs.map((blog, i) => (
+            <FadeUpReveal key={i} delayOffset={i * 100}>
+              <div className="group cursor-pointer text-left" data-cursor="hover">
+                <div className="w-full aspect-[16/9] radius-max overflow-hidden mb-6 relative">
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
+                  <img src={blog.img} alt={blog.title} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
+                  <div className="absolute top-6 left-6 z-20 bg-white px-4 py-2 radius-max text-[10px] font-bold uppercase tracking-widest text-black">
+                    {blog.category}
+                  </div>
+                </div>
+                <p className="text-gray-400 font-mono text-xs uppercase tracking-widest mb-3 flex items-center gap-2"><BookOpen size={14}/> {blog.readTime}</p>
+                <h4 className="text-3xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors duration-300 leading-tight mb-4">
+                  {blog.title}
+                </h4>
+                <p className="text-gray-600 leading-relaxed max-w-lg mb-6">{blog.desc}</p>
+                <button className="flex items-center gap-2 text-sm font-bold text-[#111] group-hover:text-[#E60000] transition-colors">Read Article <ArrowRight size={16} /></button>
+              </div>
+            </FadeUpReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const NewsInsightsGrid = () => {
+  const news = [
+    { date: "June 02, 2026", type: "Press Release", title: "ABK Imports Secures Exclusive Rights for Advanced European Grooming Line", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80" },
+    { date: "May 18, 2026", type: "Market Report", title: "The Future of Clinical Nutrition in Indian Veterinary Practices Q3 2026", img: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=800&q=80" },
+    { date: "April 30, 2026", type: "Company Milestone", title: "Expanding the Savannah HQ: Inside Our New 150k sq ft Cold-Chain Facility", img: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80" },
+    { date: "March 15, 2026", type: "Event", title: "ABK Imports to Headline the 2026 Pan-Asia Pet Expo in Mumbai", img: "https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&w=800&q=80" }
+  ];
+
+  return (
+    <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+      <div className="max-w-[1800px] mx-auto">
+        <FadeUpReveal>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-[2px] bg-[#E60000]" />
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Media Center</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">COMPANY <span className="text-[#E60000]">UPDATES.</span></h2>
+        </FadeUpReveal>
+        <div className="flex flex-col gap-8">
+          {news.map((item, i) => (
+            <FadeUpReveal key={i} delayOffset={i * 100}>
+              <div className="bg-white border border-gray-200 radius-max p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start md:items-center hover:shadow-xl transition-all duration-300 group cursor-pointer" data-cursor="hover">
+                <div className="w-full md:w-[250px] aspect-[16/9] md:aspect-square radius-max overflow-hidden shrink-0 relative">
+                  <img src={item.img} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="News" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2"><Newspaper size={14}/> {item.type} &bull; <span className="text-gray-400">{item.date}</span></p>
+                  <h3 className="text-2xl md:text-4xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors mb-4">{item.title}</h3>
+                  <button className="flex items-center gap-2 text-sm font-bold text-gray-600 group-hover:text-[#111] transition-colors">Read Press Release <ArrowRight size={16} /></button>
+                </div>
+              </div>
+            </FadeUpReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const ExpandedMissionVision = () => (
+  <section className="py-32 bg-[#111] text-white px-[3vw] text-left border-b border-white/10">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+      <div className="lg:w-1/2">
+        <FadeUpReveal>
+          <h3 className="text-sm font-bold tracking-widest text-[#E60000] uppercase mb-6 flex items-center gap-4"><div className="w-8 h-[2px] bg-[#E60000]"></div>Purpose-Driven</h3>
+          <h2 className="text-4xl md:text-6xl font-heading font-black text-white mb-6 leading-tight">MORE THAN JUST <br/>A BUSINESS.</h2>
+          <p className="text-gray-300 text-xl leading-relaxed mb-8">At ABK Imports, our core mission transcends supply chain metrics. We exist to elevate the fundamental standard of animal welfare. By bridging the gap between global nutritional science and local accessibility, we ensure every pet has the opportunity to thrive.</p>
+          <div className="grid grid-cols-2 gap-6 mt-12 border-t border-white/10 pt-12">
+            <div>
+              <h4 className="text-3xl font-heading font-bold text-[#E60000] mb-2">Integrity</h4>
+              <p className="text-gray-400 text-sm leading-relaxed">Uncompromising ethics in sourcing, testing, and distribution.</p>
+            </div>
+            <div>
+              <h4 className="text-3xl font-heading font-bold text-[#E60000] mb-2">Empathy</h4>
+              <p className="text-gray-400 text-sm leading-relaxed">Every operational decision is driven by a deep love for animals.</p>
+            </div>
+          </div>
+        </FadeUpReveal>
+      </div>
+      <div className="lg:w-1/2 h-[500px] lg:h-[700px] w-full relative radius-max overflow-hidden" data-cursor="hover">
+        <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80" alt="Dog" className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-[1.5s] grayscale-[20%]" />
+      </div>
+    </div>
+  </section>
+);
+
+const CSRExperiences = () => {
+  const experiences = [
+    { title: "A Second Chance for Bella", author: "Dr. Aarti M., Veterinary Surgeon", location: "Mumbai Shelter Network", img: "https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&w=800&q=80", text: "When Bella, a severely malnourished stray, was brought into our clinic, the odds were against her. Thanks to the clinical nutrition sponsorships provided by ABK's outreach program, we were able to put her on a specialized Orijen recovery diet. Within weeks, she regained her strength and is now happily adopted. It's interventions like these that remind us why quality nutrition matters." },
+    { title: "Finding Hope on the Highways", author: "Rahul D., Independent Rescuer", location: "Pune Outskirts", img: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80", text: "Working with highway strays is challenging. Medical supplies and quality food are always short. Partnering with the ABK CSR team allowed us to secure a monthly quota of specialized grooming and medical care supplies. We recently managed to treat an entire pack suffering from severe mange, using donated TropiClean clinical formulations. Watching their coats grow back is pure joy." },
+    { title: "Empowering Rural Pet Clinics", author: "NGO 'Pawsitive Impact'", location: "Maharashtra Rural Districts", img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=800&q=80", text: "Rural clinics often lack access to professional grooming tools needed for severe matting and surgical prep. ABK Imports outfitted five of our mobile vans with professional-grade Andis clippers. The durability and cordless features have allowed our field surgeons to operate efficiently in remote areas without reliable electricity, completely changing our operational capability." }
+  ];
+
+  return (
+    <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+      <div className="max-w-[1800px] mx-auto">
+        <FadeUpReveal>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-[2px] bg-[#E60000]" />
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Voices from the Ground</span>
+          </div>
+          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-20 max-w-4xl leading-tight">REAL IMPACT.<br/><span className="text-[#E60000]">REAL STORIES.</span></h2>
+        </FadeUpReveal>
+        
+        <div className="flex flex-col gap-24">
+          {experiences.map((exp, i) => (
+            <FadeUpReveal key={i} delayOffset={100} className={`flex flex-col ${i % 2 !== 0 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 lg:gap-20 items-center`}>
+              <div className="w-full lg:w-1/2 aspect-[4/3] radius-max overflow-hidden shadow-2xl relative group" data-cursor="hover">
+                 <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 grayscale-[10%]" alt="Experience" />
+                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
+                 <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm p-3 radius-max text-[#E60000]">
+                    <Heart size={24} fill="currentColor" />
+                 </div>
+              </div>
+              <div className="w-full lg:w-1/2 flex flex-col justify-center">
+                 <h3 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-6 leading-tight">{exp.title}</h3>
+                 <p className="text-gray-600 text-lg leading-relaxed mb-8 italic border-l-4 border-gray-200 pl-6 py-2">"{exp.text}"</p>
+                 <div>
+                   <p className="font-bold text-[#111] text-lg">{exp.author}</p>
+                   <p className="text-[#E60000] text-sm font-bold uppercase tracking-widest mt-1 flex items-center gap-2"><MapPin size={14}/> {exp.location}</p>
+                 </div>
+              </div>
+            </FadeUpReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ==========================================
 // DEDICATED PAGES (SIMULATED ROUTING)
-// ----------------------------------------------------
+// ==========================================
 
 const AboutUsPage = () => (
   <div className="animate-slide-reveal">
@@ -1416,9 +2066,16 @@ const WhyChooseABKPage = () => (
       subtitle="Our operational excellence is your competitive advantage. Discover the infrastructure powering India's top pet businesses."
       bgVideo="https://video.wixstatic.com/video/548938_096226587ef947238fc2d59bd40e0eb4/1080p/mp4/file.mp4"
     />
-    <WhyChooseABK />
-    <InteractiveLogistics />
-    <GlobalNetwork />
+    <WhyChooseABK /> 
+    <ABKTechAdvantage /> 
+    <AccountManagement /> 
+    <InteractiveLogistics /> 
+    <QualityAssurance /> 
+    <OnboardingSteps /> 
+    <MarketingSupport /> 
+    <GlobalNetwork /> 
+    <RetailerResources /> 
+    <Testimonials />
     <PreFooter />
   </div>
 );
@@ -1431,7 +2088,51 @@ const WorkWithUsPage = () => (
       bgImage="https://images.unsplash.com/photo-1521651201144-634f700b36ef?auto=format&fit=crop&w=1920&q=80"
     />
     <WorkWithUs />
+    <CompanyCulture />
+    <WorkspaceGallery />
+    <EmployeeBenefits />
+    <OpenPositions />
+    <PartnerApplicationProcess />
+    <SupplierStandards />
     <InsightsNews />
+    <PreFooter />
+  </div>
+);
+
+const BlogsPage = () => (
+  <div className="animate-slide-reveal">
+    <InternalPageHero 
+      title={<span>THE <span className="text-[#E60000]">EDITORIAL</span>.</span>} 
+      subtitle="Expert insights, deep dives into clinical nutrition, and professional grooming techniques."
+      bgImage="https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=1920&q=80"
+    />
+    <BlogGrid />
+    <PreFooter />
+  </div>
+);
+
+const NewsInsightsPage = () => (
+  <div className="animate-slide-reveal">
+    <InternalPageHero 
+      title={<span>THE <span className="text-[#E60000]">NEWSROOM</span>.</span>} 
+      subtitle="The latest press releases, company milestones, and macro-market industry reports."
+      bgImage="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1920&q=80"
+    />
+    <NewsInsightsGrid />
+    <PreFooter />
+  </div>
+);
+
+const CSRPage = () => (
+  <div className="animate-slide-reveal">
+    <InternalPageHero 
+      title={<span>BEYOND <span className="text-[#E60000]">BUSINESS</span>.</span>} 
+      subtitle="Our unwavering commitment to animal welfare, sustainable operations, and community impact."
+      bgImage="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1920&q=80"
+    />
+    <ExpandedMissionVision />
+    <CSRExperiences />
+    <SustainabilityCommitment />
     <PreFooter />
   </div>
 );
@@ -1486,6 +2187,14 @@ const ContactPage = () => (
          </div>
       </div>
     </div>
+    
+    <ContactLocations />
+    <SupportMatrix />
+    <LiveSupport />
+    <FacilityTour />
+    <WholesaleFastTrack />
+    <PartnerQuickLink />
+
   </div>
 );
 
@@ -1536,35 +2245,25 @@ const Footer = ({ navigateTo }) => {
             <h4 className="font-heading font-semibold mb-6 uppercase tracking-widest text-[11px] text-gray-500">COMPANY</h4>
             <ul className="space-y-4 text-gray-400 font-light text-[15px]">
               <li><button onClick={() => navigateTo('About Us')} className="hover:text-white transition-colors text-left" data-cursor="hover">About ABK</button></li>
-              <li className="flex items-center gap-3"><button className="hover:text-white transition-colors text-left" data-cursor="hover">RESQ HQ</button><div className="w-2.5 h-2.5 bg-[#E64C3C] rounded-full" /></li>
               <li><button onClick={() => navigateTo('Work With Us')} className="hover:text-white transition-colors text-left" data-cursor="hover">Careers</button></li>
               <li><button onClick={() => navigateTo('Contact')} className="hover:text-white transition-colors text-left" data-cursor="hover">Contact</button></li>
+              <li><button onClick={() => navigateTo('CSR & Experiences')} className="hover:text-white transition-colors text-left" data-cursor="hover">CSR & Impact</button></li>
             </ul>
           </div>
           <div className="col-span-1 md:col-span-1 lg:pl-4">
-              <h4 className="font-heading font-semibold mb-6 uppercase tracking-widest text-[11px] text-gray-500">NEWSLETTER</h4>
-              <p className="text-gray-400 font-light text-[15px] mb-6">Subscribe for B2B<br className="hidden lg:block"/> industry insights.</p>
-              
-              <div className="relative w-full max-w-[350px]">
-                <input 
-                  type="email" 
-                  placeholder="Email" 
-                  className="w-full bg-[#111] border border-white/10 focus:border-white/30 rounded-2xl py-3.5 pl-5 pr-[110px] text-white text-[15px] outline-none transition-colors shadow-inner" 
-                />
-                <button 
-                  className="absolute right-1.5 top-1.5 bottom-1.5 bg-[#D65A47] text-white px-8 rounded-xl font-medium text-[15px] hover:bg-white hover:text-[#D65A47] transition-all duration-300 flex items-center justify-center" 
-                  data-cursor="hover"
-                >
-                  Join
-                </button>
-              </div>
+              <h4 className="font-heading font-semibold mb-6 uppercase tracking-widest text-[11px] text-gray-500">RESOURCES</h4>
+              <ul className="space-y-4 text-gray-400 font-light text-[15px]">
+                <li><button onClick={() => navigateTo('Blogs')} className="hover:text-white transition-colors text-left" data-cursor="hover">Blogs & Guides</button></li>
+                <li><button onClick={() => navigateTo('News & Insights')} className="hover:text-white transition-colors text-left" data-cursor="hover">Newsroom</button></li>
+                <li><button onClick={() => navigateTo('Brand Portfolio')} className="hover:text-white transition-colors text-left" data-cursor="hover">Case Studies</button></li>
+              </ul>
           </div>
         </div>
       </div>
 
       <div className="w-full border-t border-white/5 pt-16 pb-8 overflow-hidden relative mt-16">
-        <div className="flex w-max animate-[scroll_30s_linear_infinite]">
-           {[...Array(4)].map((_, i) => (
+        <div className="flex w-max animate-footer-marquee whitespace-nowrap">
+           {[...Array(8)].map((_, i) => (
               <h1 key={i} className="text-[14vw] font-heading font-extrabold leading-none tracking-tighter text-[#141414] whitespace-nowrap pr-8 select-none">ABK IMPORTS</h1>
            ))}
         </div>
@@ -1692,6 +2391,9 @@ export default function App() {
       case 'Brand Portfolio': return <BrandPortfolioPage navigateTo={handleNavigate} />;
       case 'Why Choose ABK': return <WhyChooseABKPage />;
       case 'Work With Us': return <WorkWithUsPage />;
+      case 'Blogs': return <BlogsPage />;
+      case 'News & Insights': return <NewsInsightsPage />;
+      case 'CSR & Experiences': return <CSRPage />;
       case 'Contact': return <ContactPage />;
       default: return <div />;
     }
