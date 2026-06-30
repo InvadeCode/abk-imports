@@ -190,17 +190,29 @@ const Preloader = ({ onComplete }) => {
   );
 };
 
-const Header = ({ onOpenMenu, scrolled, navigateTo, currentPage }) => {
+const Header = ({ onOpenMenu, setCurrentPage, currentPage }) => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <header
       className={`fixed top-0 w-full z-50 px-[4vw] py-6 flex justify-between items-center transition-all duration-500 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 py-4 shadow-sm'
+          ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 py-4'
           : 'bg-transparent'
       }`}
     >
       <div
-        onClick={() => navigateTo('Home')}
+        onClick={() => {
+          window.scrollTo(0, 0);
+          setCurrentPage('Home');
+        }}
         className="cursor-pointer transition-transform hover:scale-105 duration-300"
       >
         <img
@@ -231,7 +243,7 @@ const Header = ({ onOpenMenu, scrolled, navigateTo, currentPage }) => {
   );
 };
 
-const FullScreenMenu = ({ isOpen, onClose, navigateTo }) => {
+const FullScreenMenu = ({ isOpen, onClose, setCurrentPage }) => {
   const links = [
     { name: 'Home', id: 'Home' },
     { name: 'About Us', id: 'About Us' },
@@ -242,7 +254,8 @@ const FullScreenMenu = ({ isOpen, onClose, navigateTo }) => {
   ];
 
   const handleNav = (id) => {
-    navigateTo(id);
+    setCurrentPage(id);
+    window.scrollTo(0, 0);
     onClose();
   };
 
@@ -268,12 +281,12 @@ const FullScreenMenu = ({ isOpen, onClose, navigateTo }) => {
       </div>
 
       <div className="flex-1 flex flex-col md:flex-row px-[4vw] py-12 md:py-20 h-full overflow-y-auto">
-        <div className="flex-1 flex flex-col justify-center gap-6 md:gap-8">
+        <div className="flex-[1.35] flex flex-col justify-center gap-3 md:gap-4">
           {links.map((link, i) => (
-            <div key={link.id} className="overflow-hidden">
+            <div key={link.id} className="overflow-hidden py-3">
               <button
                 onClick={() => handleNav(link.id)}
-                className={`block text-left text-4xl md:text-[5vw] font-heading font-black hover:text-[#E60000] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                className={`block text-left whitespace-nowrap text-[1.6rem] md:text-[2.55rem] lg:text-[3.2rem] leading-[1.18] font-heading font-black hover:text-[#E60000] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   isOpen
                     ? 'translate-y-0 opacity-100'
                     : 'translate-y-full opacity-0'
@@ -293,12 +306,12 @@ const FullScreenMenu = ({ isOpen, onClose, navigateTo }) => {
             isOpen ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <div className="md:text-right text-left">
+          <div className="md:text-right">
             <h4 className="font-heading font-bold text-[#E60000] mb-4 uppercase tracking-widest text-xs">
               Partner Portal
             </h4>
 
-            <button className="bg-white text-black px-10 py-4 radius-max font-bold text-sm hover:bg-[#E60000] hover:text-white transition-colors duration-300 mb-12">
+            <button className="bg-white text-black px-8 py-3 radius-max font-bold text-xs md:text-sm hover:bg-[#E60000] hover:text-white transition-colors duration-300 mb-12">
               B2B Login
             </button>
 
@@ -306,7 +319,7 @@ const FullScreenMenu = ({ isOpen, onClose, navigateTo }) => {
               Product Catalogue
             </h4>
 
-            <button className="bg-transparent border border-white text-white px-10 py-4 radius-max font-bold text-sm hover:bg-white hover:text-black transition-colors duration-300 mb-12">
+            <button className="bg-transparent border border-white text-white px-8 py-3 radius-max font-bold text-xs md:text-sm hover:bg-white hover:text-black transition-colors duration-300 mb-12">
               Download 2026-27 PDF
             </button>
 
@@ -314,7 +327,7 @@ const FullScreenMenu = ({ isOpen, onClose, navigateTo }) => {
               Direct Line
             </h4>
 
-            <p className="text-white/70 text-xl font-medium hover:text-white transition-colors cursor-pointer">
+            <p className="text-white/70 text-lg md:text-xl font-medium hover:text-white transition-colors cursor-pointer">
               partners@abkimports.com
             </p>
           </div>
@@ -325,7 +338,7 @@ const FullScreenMenu = ({ isOpen, onClose, navigateTo }) => {
 };
 
 const InternalPageHero = ({ title, subtitle, bgImage, bgVideo }) => (
-  <div className="relative w-full h-[85vh] flex items-end pb-24 pt-32 px-[3vw] bg-[#050505] overflow-hidden">
+  <div className="relative w-full h-[75vh] flex items-end pb-24 pt-32 px-[3vw] bg-[#050505] overflow-hidden">
     <div className="absolute inset-0 z-0">
       {bgVideo ? (
          <video autoPlay loop muted playsInline className="w-full h-full object-cover opacity-50 grayscale-[30%]">
@@ -340,11 +353,11 @@ const InternalPageHero = ({ title, subtitle, bgImage, bgVideo }) => (
     
     <div className="relative z-20 max-w-[1800px] mx-auto w-full text-left">
       <FadeUpReveal>
-        <div className="w-12 h-[3px] bg-[#E60000] mb-8 shadow-[0_0_15px_#E60000]" />
-        <h1 className="text-5xl md:text-7xl lg:text-[8vw] font-heading font-black tracking-tighter mb-6 text-white leading-[0.9] max-w-5xl drop-shadow-2xl">
+        <div className="w-12 h-[3px] bg-[#E60000] mb-6 shadow-[0_0_15px_#E60000]" />
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-black tracking-tighter mb-4 text-white leading-[0.9] max-w-5xl drop-shadow-2xl">
           {title}
         </h1>
-        <p className="text-xl md:text-3xl text-gray-300 font-light max-w-3xl leading-relaxed drop-shadow-md">
+        <p className="text-lg md:text-2xl text-gray-300 font-light max-w-3xl leading-relaxed drop-shadow-md">
           {subtitle}
         </p>
       </FadeUpReveal>
@@ -415,24 +428,24 @@ const Hero = ({ isReady }) => {
 
   const slides = [
     {
-      col1: "https://video.wixstatic.com/video/548938_c7e0a861d02b4ee390c0f717def4fc16/1080p/mp4/file.mp4",
-      col2: "https://video.wixstatic.com/video/548938_85ace2f9fb5e4b2db2af2b762d392168/1080p/mp4/file.mp4",
-      col3: "https://video.wixstatic.com/video/548938_7e6bd1cbe24643f1987ab6aaca35d93d/1080p/mp4/file.mp4",
+      col1: "https://video.wixstatic.com/video/548938_9ce4b3046ac6488e9e5c9435da62afb8/1080p/mp4/file.mp4",
+      col2: "https://video.wixstatic.com/video/548938_eb51c35dc901482884a1bba59e95f225/1080p/mp4/file.mp4",
+      col3: "https://video.wixstatic.com/video/548938_096226587ef947238fc2d59bd40e0eb4/1080p/mp4/file.mp4",
       pill: "Bringing the World’s Finest Pet Care Brands to India",
       heading: <>ELEVATING <br className="hidden md:block" /> THE STANDARD.</>,
       paragraph: "India's premier import and distribution network. Bringing the world's most trusted clinical nutrition, professional grooming tools, and pet lifestyle accessories to your storefront."
     },
     {
-      col1: "https://video.wixstatic.com/video/548938_12bc8c9d323d460fa14b971331c3701d/1080p/mp4/file.mp4",
-      col2: "https://video.wixstatic.com/video/548938_bc25b24b3f5b41f7bdc78ccffdf0e827/1080p/mp4/file.mp4",
-      col3: "https://video.wixstatic.com/video/548938_4cd7228df0794ae4a209f82d4acc7adc/1080p/mp4/file.mp4",
+      col1: "https://video.wixstatic.com/video/11062b_a405fb7004454b6bb08801d00cf04cb5/1080p/mp4/file.mp4",
+      col2: "https://video.wixstatic.com/video/548938_9ce4b3046ac6488e9e5c9435da62afb8/1080p/mp4/file.mp4",
+      col3: "https://video.wixstatic.com/video/548938_eb51c35dc901482884a1bba59e95f225/1080p/mp4/file.mp4",
       pill: "India’s Trusted Partner for Exclusive Pet Products",
       heading: <>UNMATCHED <br className="hidden md:block" /> DISTRIBUTION.</>,
       paragraph: "We bridge the gap between global manufacturers and Indian retailers, ensuring a seamless, climate-controlled supply chain and uncompromising product integrity."
     },
     {
       col1: "https://video.wixstatic.com/video/548938_096226587ef947238fc2d59bd40e0eb4/1080p/mp4/file.mp4",
-      col2: "https://video.wixstatic.com/video/548938_d666ef7115fd4243bf34adbd1092eb34/1080p/mp4/file.mp4",
+      col2: "https://video.wixstatic.com/video/11062b_a405fb7004454b6bb08801d00cf04cb5/1080p/mp4/file.mp4",
       col3: "https://video.wixstatic.com/video/548938_9ce4b3046ac6488e9e5c9435da62afb8/1080p/mp4/file.mp4",
       pill: "Discover the Latest Global Launches",
       heading: <>INNOVATION <br className="hidden md:block" /> DELIVERED.</>,
@@ -447,14 +460,13 @@ const Hero = ({ isReady }) => {
     let floatOutTimeout;
 
     const runSequence = () => {
-      setTextVisible(false);
       floatInTimeout = setTimeout(() => {
         setTextVisible(true);
-      }, 800); 
+      }, 600); 
 
       floatOutTimeout = setTimeout(() => {
         setTextVisible(false);
-      }, 6000); 
+      }, 5500); 
     };
 
     runSequence();
@@ -472,7 +484,7 @@ const Hero = ({ isReady }) => {
   }, [isReady, slides.length]);
 
   return (
-    <section id="home" className="relative w-full h-screen flex items-end pb-8 md:pb-12 px-[3vw] overflow-hidden bg-[#050505]">
+    <section id="home" className="relative w-full h-screen flex items-end pb-12 md:pb-16 px-[3vw] overflow-hidden bg-[#050505]">
       {/* Background Video Slider Columns */}
       <div className="absolute inset-0 z-0 flex w-full h-full">
         {/* Column 1 (Slides Up) */}
@@ -521,23 +533,25 @@ const Hero = ({ isReady }) => {
       <div ref={textRef} className="relative z-20 w-full max-w-7xl will-change-transform">
         
         {/* Pill */}
-        <div className={`transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] ${textVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: '0ms' }}>
+        <div className={`transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] ${textVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: textVisible ? '0ms' : '0ms' }}>
           <div className="flex items-center gap-3 mb-4">
              <div className="w-10 h-[2px] bg-[#E60000]" />
-             <span className="text-white font-medium tracking-widest uppercase text-xs md:text-sm shadow-sm">{slides[activeSlide].pill}</span>
+             <span className="text-white font-medium tracking-widest uppercase text-[10px] md:text-xs shadow-sm">
+               {slides[activeSlide].pill}
+             </span>
           </div>
         </div>
         
         {/* Title */}
         <div className={`transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] ${textVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: textVisible ? '100ms' : '50ms' }}>
-          <h1 className="text-5xl md:text-7xl lg:text-[8vw] font-heading font-extrabold text-white leading-[0.95] tracking-tighter mb-4 drop-shadow-lg">
+          <h1 className="text-4xl md:text-6xl lg:text-[6.5vw] font-heading font-extrabold text-white leading-[0.95] tracking-tighter mb-4 drop-shadow-lg">
             {slides[activeSlide].heading}
           </h1>
         </div>
 
         {/* Paragraph */}
         <div className={`transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] ${textVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: textVisible ? '200ms' : '100ms' }}>
-          <p className="text-lg md:text-xl text-gray-300 font-light max-w-2xl leading-relaxed mb-6 drop-shadow-md">
+          <p className="text-base md:text-lg text-gray-300 font-light max-w-2xl leading-relaxed mb-6 drop-shadow-md">
             {slides[activeSlide].paragraph}
           </p>
         </div>
@@ -545,9 +559,9 @@ const Hero = ({ isReady }) => {
         {/* Button */}
         <div className={`transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] ${textVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`} style={{ transitionDelay: textVisible ? '300ms' : '150ms' }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-             <button data-cursor="hover" className="bg-[#E60000] text-white px-8 py-4 md:px-10 md:py-5 radius-max font-semibold text-sm hover:bg-white hover:text-[#E60000] transition-colors duration-300 flex items-center gap-3">
-               Discover Our Network <ArrowRight size={18} />
-             </button>
+            <button data-cursor="hover" className="bg-[#E60000] text-white px-8 py-3 md:px-8 md:py-4 radius-max font-semibold text-sm hover:bg-white hover:text-[#E60000] transition-colors duration-300 flex items-center gap-3">
+              Discover Our Network <ArrowRight size={18} />
+            </button>
           </div>
         </div>
 
@@ -557,27 +571,27 @@ const Hero = ({ isReady }) => {
 };
 
 const Statistics = () => (
-  <section className="py-24 bg-white border-b border-gray-100 z-20 relative">
+  <section className="py-20 bg-white border-b border-gray-100 z-20 relative">
     <div className="px-[3vw] max-w-[1800px] mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 divide-y md:divide-y-0 lg:divide-x divide-gray-200">
         <FadeUpReveal delayOffset={0} className="flex flex-col pt-6 md:pt-0 lg:pl-8 first:pl-0">
-          <h3 className="text-6xl md:text-7xl font-heading font-black text-[#111] mb-2 tracking-tighter flex items-start">#1<span className="text-[#E60000] text-4xl">.</span></h3>
-          <p className="text-[#E60000] text-sm font-bold uppercase tracking-wider mb-2">In India</p>
+          <h3 className="text-5xl md:text-6xl font-heading font-black text-[#111] mb-2 tracking-tighter flex items-start">#1<span className="text-[#E60000] text-3xl">.</span></h3>
+          <p className="text-[#E60000] text-xs font-bold uppercase tracking-wider mb-2">In India</p>
           <p className="text-gray-500 text-sm font-medium leading-relaxed">The premier pet products distribution network nationwide.</p>
         </FadeUpReveal>
         <FadeUpReveal delayOffset={100} className="flex flex-col pt-6 md:pt-0 lg:pl-8">
-          <h3 className="text-6xl md:text-7xl font-heading font-black text-[#111] mb-2 tracking-tighter flex items-start">37<span className="text-[#E60000] text-4xl">+</span></h3>
-          <p className="text-[#E60000] text-sm font-bold uppercase tracking-wider mb-2">Premium Brands</p>
+          <h3 className="text-5xl md:text-6xl font-heading font-black text-[#111] mb-2 tracking-tighter flex items-start">37<span className="text-[#E60000] text-3xl">+</span></h3>
+          <p className="text-[#E60000] text-xs font-bold uppercase tracking-wider mb-2">Premium Brands</p>
           <p className="text-gray-500 text-sm font-medium leading-relaxed">Exclusive international partnerships bringing global quality home.</p>
         </FadeUpReveal>
         <FadeUpReveal delayOffset={200} className="flex flex-col pt-6 md:pt-0 lg:pl-8">
-          <h3 className="text-6xl md:text-7xl font-heading font-black text-[#111] mb-2 tracking-tighter flex items-start">2500<span className="text-[#E60000] text-4xl">+</span></h3>
-          <p className="text-[#E60000] text-sm font-bold uppercase tracking-wider mb-2">Unique Products</p>
+          <h3 className="text-5xl md:text-6xl font-heading font-black text-[#111] mb-2 tracking-tighter flex items-start">2500<span className="text-[#E60000] text-3xl">+</span></h3>
+          <p className="text-[#E60000] text-xs font-bold uppercase tracking-wider mb-2">Unique Products</p>
           <p className="text-gray-500 text-sm font-medium leading-relaxed">A comprehensive catalog covering clinical nutrition to grooming.</p>
         </FadeUpReveal>
         <FadeUpReveal delayOffset={300} className="flex flex-col pt-6 md:pt-0 lg:pl-8">
-          <h3 className="text-6xl md:text-7xl font-heading font-black text-[#111] mb-2 tracking-tighter flex items-start">1000<span className="text-[#E60000] text-4xl">+</span></h3>
-          <p className="text-[#E60000] text-sm font-bold uppercase tracking-wider mb-2">Retail Partners</p>
+          <h3 className="text-5xl md:text-6xl font-heading font-black text-[#111] mb-2 tracking-tighter flex items-start">1000<span className="text-[#E60000] text-3xl">+</span></h3>
+          <p className="text-[#E60000] text-xs font-bold uppercase tracking-wider mb-2">Retail Partners</p>
           <p className="text-gray-500 text-sm font-medium leading-relaxed">Trusted by clinics, salons, and pet boutiques across the country.</p>
         </FadeUpReveal>
       </div>
@@ -586,15 +600,15 @@ const Statistics = () => (
 );
 
 const WhoAreWe = ({ navigateTo }) => (
-  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left border-b border-gray-100">
-    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+  <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left border-b border-gray-100">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-20 items-start">
       <div className="w-full lg:w-1/2">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Who Are We</span>
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Who Are We</span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-[4.5vw] font-heading font-black text-[#111] mb-6 leading-tight tracking-tighter">
+          <h2 className="text-3xl md:text-5xl lg:text-[3.5vw] font-heading font-black text-[#111] mb-6 leading-tight tracking-tighter">
             GLOBAL BRANDS.<br/>
             <span className="text-[#E60000]">INDIAN UNDERSTANDING.</span><br/>
             COMPLETE PET CARE.
@@ -603,13 +617,13 @@ const WhoAreWe = ({ navigateTo }) => (
       </div>
       <div className="w-full lg:w-1/2">
         <FadeUpReveal delayOffset={100}>
-          <p className="text-gray-800 text-xl md:text-2xl leading-relaxed mb-6 font-medium">
+          <p className="text-gray-800 text-lg md:text-xl leading-relaxed mb-6 font-medium">
             ABK Imports is a trusted name in India’s pet care industry, bringing premium global brands and practical in-house solutions to pet parents, retailers, groomers, veterinarians, and pet care professionals since 2010.
           </p>
-          <p className="text-gray-500 text-base md:text-lg leading-relaxed mb-10">
+          <p className="text-gray-500 text-sm md:text-base leading-relaxed mb-10">
             From nutrition and treats to grooming, hygiene, accessories, veterinary products, and professional equipment, we deliver complete pet care solutions built for the Indian market.
           </p>
-          <button onClick={() => navigateTo && navigateTo('Brand Portfolio')} className="bg-[#111] text-white px-10 py-5 radius-max font-bold text-sm uppercase tracking-widest hover:bg-[#E60000] transition-colors flex items-center gap-3 w-max shadow-xl" data-cursor="hover">
+          <button onClick={() => navigateTo && navigateTo('Brand Portfolio')} className="bg-[#111] text-white px-8 py-4 radius-max font-bold text-sm uppercase tracking-widest hover:bg-[#E60000] transition-colors flex items-center gap-3 w-max shadow-xl" data-cursor="hover">
             Explore Our Brands <ArrowRight size={18} />
           </button>
         </FadeUpReveal>
@@ -627,15 +641,15 @@ const TailoredSolutions = ({ navigateTo }) => {
   ];
 
   return (
-    <section className="py-32 bg-[#FAFAFA] relative px-[3vw]">
+    <section className="py-24 bg-[#FAFAFA] relative px-[3vw]">
       <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
          <div className="w-full lg:w-1/2 order-2 lg:order-1 flex flex-col justify-center text-left">
             <FadeUpReveal>
-               <h2 className="text-5xl md:text-7xl lg:text-[5.5vw] font-heading font-black text-[#111] leading-[1.05] tracking-tighter mb-16">
+               <h2 className="text-4xl md:text-5xl lg:text-[4.5vw] font-heading font-black text-[#111] leading-[1.05] tracking-tighter mb-12">
                  Tailored <span className="text-[#E60000]">Pet Care</span><br/>Solutions
                </h2>
             </FadeUpReveal>
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-6">
                {categories.map((cat, idx) => (
                   <div
                     key={idx}
@@ -644,9 +658,9 @@ const TailoredSolutions = ({ navigateTo }) => {
                     className={`cursor-pointer transition-all duration-500 border-l-[4px] pl-6 py-2 group ${activeIdx === idx ? 'border-[#E60000]' : 'border-gray-200 opacity-40 hover:opacity-70'}`}
                     data-cursor="hover"
                   >
-                     <h3 className={`text-4xl md:text-5xl lg:text-6xl font-heading font-black transition-colors duration-300 ${activeIdx === idx ? 'text-[#E60000]' : 'text-[#111]'}`}>{cat.title}</h3>
+                     <h3 className={`text-3xl md:text-4xl lg:text-5xl font-heading font-black transition-colors duration-300 ${activeIdx === idx ? 'text-[#E60000]' : 'text-[#111]'}`}>{cat.title}</h3>
                      <div className={`overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${activeIdx === idx ? 'max-h-[150px] mt-4 opacity-100' : 'max-h-0 opacity-0'}`}>
-                       <p className="text-gray-600 text-lg mb-4 leading-relaxed max-w-lg">{cat.desc}</p>
+                       <p className="text-gray-600 text-base mb-4 leading-relaxed max-w-lg">{cat.desc}</p>
                        <button className="flex items-center gap-2 text-sm font-bold text-[#111] group-hover:text-[#E60000] transition-colors">Explore Category <ArrowRight size={16} /></button>
                      </div>
                   </div>
@@ -654,7 +668,7 @@ const TailoredSolutions = ({ navigateTo }) => {
             </div>
          </div>
 
-         <div className="w-full lg:w-1/2 order-1 lg:order-2 h-[400px] lg:h-[700px] relative radius-max overflow-hidden shadow-2xl" data-cursor="hover">
+         <div className="w-full lg:w-1/2 order-1 lg:order-2 h-[400px] lg:h-[600px] relative radius-max overflow-hidden shadow-2xl" data-cursor="hover">
             {categories.map((cat, idx) => (
                <img
                  key={idx}
@@ -696,13 +710,13 @@ const DoubleBrandMarquee = ({ navigateTo }) => {
   const scroll2 = [...row2, ...row2, ...row2, ...row2];
 
   return (
-    <section className="py-20 bg-white overflow-hidden relative border-b border-gray-100 flex flex-col gap-2">
+    <section className="py-16 bg-white overflow-hidden relative border-b border-gray-100 flex flex-col gap-2">
       <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
       
       <div className="flex animate-marquee-reverse whitespace-nowrap items-center w-max">
         {scroll1.map((brand, i) => (
-          <div key={`row1-${i}`} onClick={() => navigateTo && navigateTo(`Brand: ${brand.id}`)} className="mx-6 text-5xl md:text-7xl lg:text-[7vw] leading-none font-heading font-black text-[#F2F2F2] hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none" data-cursor="hover">
+          <div key={`row1-${i}`} onClick={() => navigateTo && navigateTo(`Brand: ${brand.id}`)} className="mx-6 text-4xl md:text-5xl lg:text-[5vw] leading-none font-heading font-black text-[#F2F2F2] hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none" data-cursor="hover">
             {brand.label}
           </div>
         ))}
@@ -710,7 +724,7 @@ const DoubleBrandMarquee = ({ navigateTo }) => {
 
       <div className="flex animate-marquee whitespace-nowrap items-center w-max">
         {scroll2.map((brand, i) => (
-          <div key={`row2-${i}`} onClick={() => navigateTo && navigateTo(`Brand: ${brand.id}`)} className="mx-6 text-5xl md:text-7xl lg:text-[7vw] leading-none font-heading font-black text-[#F2F2F2] hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none" data-cursor="hover">
+          <div key={`row2-${i}`} onClick={() => navigateTo && navigateTo(`Brand: ${brand.id}`)} className="mx-6 text-4xl md:text-5xl lg:text-[5vw] leading-none font-heading font-black text-[#F2F2F2] hover:text-[#E60000] transition-colors duration-300 cursor-pointer select-none" data-cursor="hover">
             {brand.label}
           </div>
         ))}
@@ -738,36 +752,36 @@ const AboutUs = () => {
   ];
 
   return (
-    <section className="py-32 blended-bg overflow-hidden relative text-left">
+    <section className="py-24 blended-bg overflow-hidden relative text-left">
       <div className="absolute top-0 right-0 w-[40vw] h-[40vw] bg-[#E60000]/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-20 left-10 w-[30vw] h-[30vw] bg-[#E60000]/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="px-[3vw] max-w-[1800px] mx-auto relative z-10">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Timeline</span>
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Timeline</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter text-[#111] mb-20 max-w-3xl relative">
+          <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111] mb-16 max-w-3xl relative">
             A LEGACY BUILT ON THE <span className="text-[#E60000]">SPIRIT</span> OF CARE.
             <Star className="absolute -top-12 -left-12 text-[#E60000]/10 animate-spin-slow w-32 h-32 hidden md:block" />
           </h2>
         </FadeUpReveal>
 
-        <div className="mb-32 flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+        <div className="mb-24 flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
           <div className="w-full lg:w-1/2">
             <FadeUpReveal delayOffset={100}>
-              <div className="relative border-l-[2px] border-[#E8ECEF] py-6 space-y-16">
+              <div className="relative border-l-[2px] border-[#E8ECEF] py-6 space-y-12">
                 {timelineData.map((item, idx) => (
                   <div key={idx} className="relative group cursor-pointer pl-10 md:pl-16" onMouseEnter={() => setActiveTimeline(idx)} data-cursor="hover">
                     <div className={`absolute top-2 left-[-13px] w-[24px] h-[24px] bg-[#FAFAFA] border-[4px] rounded-full transition-all duration-300 z-10 ${activeTimeline === idx ? 'border-[#E60000] scale-125' : 'border-[#CBD5E1] group-hover:border-[#E60000] group-hover:scale-110'}`} />
-                    <h4 className={`text-5xl font-heading font-black transition-colors duration-300 mb-3 ${activeTimeline === idx ? 'text-[#E60000]' : 'text-[#CBD5E1] group-hover:text-[#E60000]'}`}>{item.year}</h4>
-                    <p className={`text-lg transition-colors duration-300 max-w-md font-medium ${activeTimeline === idx ? 'text-gray-900' : 'text-gray-500'}`}>{item.text}</p>
+                    <h4 className={`text-4xl font-heading font-black transition-colors duration-300 mb-3 ${activeTimeline === idx ? 'text-[#E60000]' : 'text-[#CBD5E1] group-hover:text-[#E60000]'}`}>{item.year}</h4>
+                    <p className={`text-base transition-colors duration-300 max-w-md font-medium ${activeTimeline === idx ? 'text-gray-900' : 'text-gray-500'}`}>{item.text}</p>
                   </div>
                 ))}
               </div>
             </FadeUpReveal>
           </div>
-          <div className="w-full lg:w-1/2 h-[450px] md:h-[550px] relative radius-max overflow-hidden shadow-2xl mt-10 lg:mt-0">
+          <div className="w-full lg:w-1/2 h-[400px] md:h-[500px] relative radius-max overflow-hidden shadow-2xl mt-10 lg:mt-0">
              {timelineData.map((item, idx) => (
                <img key={idx} src={item.img} alt={`Roadmap ${item.year}`} className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.2s] ease-[cubic-bezier(0.16,1,0.3,1)] ${activeTimeline === idx ? 'opacity-100 scale-100 filter-none' : 'opacity-0 scale-110 blur-sm'}`} />
              ))}
@@ -775,7 +789,7 @@ const AboutUs = () => {
              <div className="absolute bottom-8 left-8 right-8 z-20 flex items-end justify-between">
                 <div>
                   <p className="text-[#E60000] text-[10px] font-bold tracking-widest uppercase mb-2">Company Milestone</p>
-                  <p className="text-white font-heading font-bold text-3xl md:text-4xl tracking-wide leading-none">Roadmap<br/>{timelineData[activeTimeline].year}</p>
+                  <p className="text-white font-heading font-bold text-2xl md:text-3xl tracking-wide leading-none">Roadmap<br/>{timelineData[activeTimeline].year}</p>
                 </div>
                 <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white shrink-0"><ArrowUpRight size={24} /></div>
              </div>
@@ -783,13 +797,13 @@ const AboutUs = () => {
         </div>
 
         <FadeUpReveal delayOffset={200}>
-          <h3 className="text-2xl font-heading font-bold mb-8 uppercase tracking-widest">Our Core Values</h3>
-          <div className="flex flex-col md:flex-row w-full h-[600px] md:h-[400px] gap-2 md:gap-4">
+          <h3 className="text-xl font-heading font-bold mb-6 uppercase tracking-widest">Our Core Values</h3>
+          <div className="flex flex-col md:flex-row w-full h-[600px] md:h-[350px] gap-2 md:gap-4">
             {spirit.map((item, idx) => (
               <div key={idx} className="spirit-card bg-white border border-gray-100 radius-max p-6 flex flex-col justify-between overflow-hidden shadow-sm relative group" data-cursor="hover">
-                <div className="text-5xl md:text-7xl font-heading font-black text-gray-200 group-hover:text-white/20 transition-colors">{item.l}</div>
+                <div className="text-4xl md:text-6xl font-heading font-black text-gray-200 group-hover:text-white/20 transition-colors">{item.l}</div>
                 <div className="spirit-title w-full md:w-[250px]">
-                   <h4 className="text-2xl font-heading font-bold mb-2 whitespace-nowrap">{item.title}</h4>
+                   <h4 className="text-xl font-heading font-bold mb-2 whitespace-nowrap">{item.title}</h4>
                    <p className="text-sm opacity-90 leading-relaxed hidden md:block">{item.desc}</p>
                 </div>
               </div>
@@ -814,19 +828,19 @@ const InteractiveCategoryExplorer = () => {
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Product Verticals</span>
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Product Verticals</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter text-[#111] mb-12">EXPLORE CATEGORIES.</h2>
+          <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111] mb-12">EXPLORE CATEGORIES.</h2>
         </FadeUpReveal>
 
-        <div className="flex flex-col md:flex-row h-[600px] md:h-[500px] gap-4 w-full">
+        <div className="flex flex-col md:flex-row h-[600px] md:h-[450px] gap-4 w-full">
           {categories.map((cat, idx) => (
             <div key={idx} className="category-card relative radius-max overflow-hidden group" data-cursor="hover">
               <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-500 z-10" />
               <img src={cat.img} alt={cat.title} className="absolute inset-0 w-full h-full object-cover grayscale-[50%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-[1.5s]" />
               <div className="absolute bottom-0 left-0 p-8 z-20 text-white w-full">
                 <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full inline-block">{cat.count}</p>
-                <h3 className="text-3xl md:text-4xl font-heading font-bold mb-2 whitespace-nowrap">{cat.title}</h3>
+                <h3 className="text-2xl md:text-3xl font-heading font-bold mb-2 whitespace-nowrap">{cat.title}</h3>
                 <div className="cat-content h-0 overflow-hidden group-hover:h-auto">
                   <p className="text-sm text-gray-200 mt-2 max-w-xs">{cat.desc}</p>
                   <button className="mt-4 flex items-center gap-2 text-sm font-semibold hover:text-[#E60000] transition-colors">
@@ -848,18 +862,18 @@ const ProductCatalogue = () => {
        <div className="max-w-[1800px] mx-auto px-[3vw] py-24 md:py-32 flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="w-full md:w-1/2 relative z-10 text-white">
              <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="ABK Imports" className="h-[80px] mb-8 brightness-0 invert object-contain" />
-             <h2 className="text-6xl md:text-[6vw] font-heading font-black leading-[0.9] tracking-tighter mb-4 uppercase">
+             <h2 className="text-4xl md:text-[4.5vw] font-heading font-black leading-[0.9] tracking-tighter mb-4 uppercase">
                 PRODUCT <br/> CATALOGUE
              </h2>
-             <p className="text-3xl font-heading font-bold tracking-widest mb-12">2026-27</p>
-             <button className="bg-white text-[#E64C3C] px-10 py-5 radius-max font-bold text-sm hover:bg-black hover:text-white transition-colors duration-300 shadow-2xl flex items-center gap-3 w-max" data-cursor="hover">
+             <p className="text-2xl font-heading font-bold tracking-widest mb-12">2026-27</p>
+             <button className="bg-white text-[#E64C3C] px-10 py-4 radius-max font-bold text-sm hover:bg-black hover:text-white transition-colors duration-300 shadow-2xl flex items-center gap-3 w-max" data-cursor="hover">
                 Download Master PDF <ArrowRight size={20}/>
              </button>
           </div>
           <div className="w-full md:w-1/2 relative flex justify-center">
-             <div className="w-[80%] max-w-[500px] aspect-[3/4] bg-white rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.5)] rotate-2 hover:rotate-0 transition-transform duration-700 flex flex-col items-center justify-center p-8 border-8 border-gray-100">
-                <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="Logo" className="w-32 mb-8 opacity-20" />
-                <h3 className="text-4xl font-heading font-black text-center text-gray-800">MASTER CATALOGUE</h3>
+             <div className="w-[80%] max-w-[450px] aspect-[3/4] bg-white rounded-2xl shadow-[0_30px_60px_rgba(0,0,0,0.5)] rotate-2 hover:rotate-0 transition-transform duration-700 flex flex-col items-center justify-center p-8 border-8 border-gray-100">
+                <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="Logo" className="w-24 mb-8 opacity-20" />
+                <h3 className="text-3xl font-heading font-black text-center text-gray-800">MASTER CATALOGUE</h3>
                 <div className="w-16 h-2 bg-[#E64C3C] mt-6"></div>
              </div>
           </div>
@@ -876,17 +890,17 @@ const WhyChooseABK = () => {
   ];
 
   return (
-    <section id="why-choose-abk" className="py-32 bg-[#F9F9F9] relative overflow-hidden bg-dots text-left">
+    <section id="why-choose-abk" className="py-24 bg-[#F9F9F9] relative overflow-hidden bg-dots text-left">
       <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-white rounded-full blur-[100px] pointer-events-none" />
       
-      <div className="px-[3vw] max-w-[1800px] mx-auto mb-20 relative z-10">
+      <div className="px-[3vw] max-w-[1800px] mx-auto mb-16 relative z-10">
          <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
                <div className="w-10 h-[2px] bg-[#E60000]" />
-               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Capabilities</span>
+               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Capabilities</span>
             </div>
-            <h2 className="text-5xl md:text-7xl font-heading font-extrabold tracking-tighter mb-6 leading-[1]">WHY CHOOSE <span className="text-[#E60000]">ABK IMPORTS.</span></h2>
-            <p className="text-gray-600 text-xl leading-relaxed max-w-3xl">We provide more than just products. We provide a robust, tech-enabled infrastructure designed to scale your retail or clinical operations.</p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-extrabold tracking-tighter mb-6 leading-[1]">WHY CHOOSE <span className="text-[#E60000]">ABK IMPORTS.</span></h2>
+            <p className="text-gray-600 text-lg leading-relaxed max-w-3xl">We provide more than just products. We provide a robust, tech-enabled infrastructure designed to scale your retail or clinical operations.</p>
          </FadeUpReveal>
       </div>
 
@@ -898,7 +912,7 @@ const WhyChooseABK = () => {
              <FadeUpReveal key={idx} delayOffset={idx * 150}>
                <div className="bg-white border border-gray-100 radius-max p-10 md:p-14 hover:shadow-xl transition-all duration-500 group h-full hover:-translate-y-2 text-left" data-cursor="hover">
                   <div className="w-20 h-20 bg-[#FFF5F5] rounded-full flex items-center justify-center text-[#E60000] font-heading font-black text-3xl mb-8 group-hover:scale-110 transition-transform shadow-[0_0_20px_rgba(230,0,0,0.1)]">0{idx + 1}</div>
-                  <h3 className="text-2xl font-heading font-bold mb-4 text-[#111]">{pt.title}</h3>
+                  <h3 className="text-xl font-heading font-bold mb-4 text-[#111]">{pt.title}</h3>
                   <p className="text-gray-600 text-base leading-relaxed">{pt.desc}</p>
                </div>
              </FadeUpReveal>
@@ -910,19 +924,19 @@ const WhyChooseABK = () => {
 };
 
 const ABKTechAdvantage = () => (
-  <section className="py-32 bg-white px-[3vw] text-left border-y border-gray-100">
+  <section className="py-24 bg-white px-[3vw] text-left border-y border-gray-100">
     <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
        <div className="lg:w-1/2">
          <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
                <div className="w-10 h-[2px] bg-[#E60000]" />
-               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Tech Infrastructure</span>
+               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Tech Infrastructure</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-8 leading-tight">DATA-DRIVEN <br/><span className="text-[#E60000]">DISTRIBUTION.</span></h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-8">Our proprietary B2B portal goes beyond ordering. We provide our partners with actionable retail analytics, API-driven inventory syncing, and automated restocking triggers.</p>
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-8 leading-tight">DATA-DRIVEN <br/><span className="text-[#E60000]">DISTRIBUTION.</span></h2>
+            <p className="text-gray-600 text-base leading-relaxed mb-8">Our proprietary B2B portal goes beyond ordering. We provide our partners with actionable retail analytics, API-driven inventory syncing, and automated restocking triggers.</p>
             <ul className="flex flex-col gap-4">
               {['Real-time inventory mapping via custom dashboard', 'Automated purchase order generation', 'Predictive demand analytics tailored to your region'].map((item, i) => (
-                <li key={i} className="flex items-center gap-3 text-[#111] font-bold">
+                <li key={i} className="flex items-center gap-3 text-[#111] font-bold text-sm md:text-base">
                    <CheckCircle2 size={20} className="text-[#E60000]" /> {item}
                 </li>
               ))}
@@ -937,14 +951,14 @@ const ABKTechAdvantage = () => (
 );
 
 const AccountManagement = () => (
-  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+  <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left">
     <div className="max-w-[1800px] mx-auto">
       <FadeUpReveal>
         <div className="flex items-center gap-3 mb-6">
            <div className="w-10 h-[2px] bg-[#E60000]" />
-           <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Partner Success</span>
+           <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Partner Success</span>
         </div>
-        <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">DEDICATED <span className="text-[#E60000]">SUPPORT.</span></h2>
+        <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">DEDICATED <span className="text-[#E60000]">SUPPORT.</span></h2>
       </FadeUpReveal>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
@@ -953,10 +967,10 @@ const AccountManagement = () => (
           { icon: <HeartHandshake size={32} />, title: "Priority Resolution", desc: "A streamlined B2B ticketing system ensuring any operational hurdles are resolved seamlessly within 24 hours." }
         ].map((item, i) => (
           <FadeUpReveal key={i} delayOffset={i * 100}>
-            <div className="bg-white p-10 radius-max border border-gray-100 hover:shadow-xl transition-all duration-300 h-full group" data-cursor="hover">
+            <div className="bg-white p-8 md:p-10 radius-max border border-gray-100 hover:shadow-xl transition-all duration-300 h-full group" data-cursor="hover">
               <div className="w-16 h-16 bg-[#FFF5F5] text-[#E60000] rounded-full flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">{item.icon}</div>
-              <h3 className="text-2xl font-heading font-bold text-[#111] mb-4">{item.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+              <h3 className="text-xl font-heading font-bold text-[#111] mb-4">{item.title}</h3>
+              <p className="text-gray-600 leading-relaxed text-base">{item.desc}</p>
             </div>
           </FadeUpReveal>
         ))}
@@ -966,16 +980,16 @@ const AccountManagement = () => (
 );
 
 const QualityAssurance = () => (
-  <section className="py-32 bg-[#E60000] text-white px-[3vw] text-left">
+  <section className="py-24 bg-[#E60000] text-white px-[3vw] text-left">
     <div className="max-w-[1800px] mx-auto text-center flex flex-col items-center">
       <FadeUpReveal>
          <ShieldCheck size={64} className="mb-8 mx-auto text-white/90" />
-         <h2 className="text-5xl md:text-7xl font-heading font-black tracking-tighter mb-8 leading-[1]">100% UNCOMPROMISED<br/>QUALITY CONTROL.</h2>
-         <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed mb-12">From the manufacturer's facility to your storefront, we maintain an unbroken chain of custody. Every batch is tracked, every import is legally certified, and cold-chain integrity is strictly enforced.</p>
+         <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter mb-6 leading-[1]">100% UNCOMPROMISED<br/>QUALITY CONTROL.</h2>
+         <p className="text-lg text-white/90 max-w-3xl mx-auto leading-relaxed mb-10">From the manufacturer's facility to your storefront, we maintain an unbroken chain of custody. Every batch is tracked, every import is legally certified, and cold-chain integrity is strictly enforced.</p>
          <div className="flex flex-wrap justify-center gap-4">
-            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">FSSAI Certified</span>
-            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">AQCS Cleared</span>
-            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">Legal Metrology Compliant</span>
+            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-xs uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">FSSAI Certified</span>
+            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-xs uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">AQCS Cleared</span>
+            <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-xs uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">Legal Metrology Compliant</span>
          </div>
       </FadeUpReveal>
     </div>
@@ -990,23 +1004,23 @@ const OnboardingSteps = () => {
     { num: "04", title: "First Dispatch", desc: "Place your order via the portal with immediate warehouse dispatch." }
   ];
   return (
-    <section className="py-32 bg-white px-[3vw] text-left">
+    <section className="py-24 bg-white px-[3vw] text-left">
       <div className="max-w-[1800px] mx-auto">
          <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
                <div className="w-10 h-[2px] bg-[#E60000]" />
-               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Getting Started</span>
+               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Getting Started</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">SEAMLESS <span className="text-[#E60000]">ONBOARDING.</span></h2>
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">SEAMLESS <span className="text-[#E60000]">ONBOARDING.</span></h2>
          </FadeUpReveal>
          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
            {steps.map((step, i) => (
              <FadeUpReveal key={i} delayOffset={i * 150}>
                 <div className="relative border-t-2 border-gray-100 pt-8 mt-12 md:mt-0 group hover:border-[#E60000] transition-colors" data-cursor="hover">
                   <div className="absolute -top-[20px] left-0 bg-white pr-4">
-                    <span className="text-4xl font-heading font-black text-gray-200 group-hover:text-[#E60000] transition-colors">{step.num}</span>
+                    <span className="text-3xl font-heading font-black text-gray-200 group-hover:text-[#E60000] transition-colors">{step.num}</span>
                   </div>
-                  <h3 className="text-xl font-heading font-bold text-[#111] mb-3 mt-4">{step.title}</h3>
+                  <h3 className="text-lg font-heading font-bold text-[#111] mb-3 mt-4">{step.title}</h3>
                   <p className="text-gray-600 leading-relaxed text-sm">{step.desc}</p>
                 </div>
              </FadeUpReveal>
@@ -1018,19 +1032,19 @@ const OnboardingSteps = () => {
 };
 
 const MarketingSupport = () => (
-  <section className="py-32 bg-[#111] text-white px-[3vw] text-left">
+  <section className="py-24 bg-[#111] text-white px-[3vw] text-left">
     <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
-       <div className="lg:w-1/2 order-2 lg:order-1 h-[400px] md:h-[600px] w-full relative radius-max overflow-hidden" data-cursor="hover">
+       <div className="lg:w-1/2 order-2 lg:order-1 h-[400px] md:h-[500px] w-full relative radius-max overflow-hidden" data-cursor="hover">
          <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=80" alt="Marketing" className="w-full h-full object-cover grayscale-[30%] hover:scale-105 transition-transform duration-1000" />
        </div>
        <div className="lg:w-1/2 order-1 lg:order-2">
          <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
                <div className="w-10 h-[2px] bg-[#E60000]" />
-               <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Growth Engine</span>
+               <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Growth Engine</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-black mb-8 leading-tight">DRIVING <span className="text-[#E60000]">SELL-THROUGH.</span></h2>
-            <p className="text-gray-300 text-lg leading-relaxed mb-10">We don't just put products on your shelves; we help you move them. Our retail partners gain exclusive access to a massive repository of marketing collateral and strategic support.</p>
+            <h2 className="text-3xl md:text-5xl font-heading font-black mb-6 leading-tight">DRIVING <span className="text-[#E60000]">SELL-THROUGH.</span></h2>
+            <p className="text-gray-300 text-base leading-relaxed mb-10">We don't just put products on your shelves; we help you move them. Our retail partners gain exclusive access to a massive repository of marketing collateral and strategic support.</p>
             <div className="grid grid-cols-2 gap-8">
                {[
                  { title: "Point of Sale", desc: "Premium physical displays and brand shelving." },
@@ -1039,7 +1053,7 @@ const MarketingSupport = () => (
                  { title: "Sampling", desc: "Strategic trial programs for new product launches." }
                ].map((item, i) => (
                  <div key={i} className="border-l-2 border-white/20 pl-4 hover:border-[#E60000] transition-colors cursor-default" data-cursor="hover">
-                    <h4 className="text-lg font-bold mb-2 text-[#E60000]">{item.title}</h4>
+                    <h4 className="text-base font-bold mb-2 text-[#E60000]">{item.title}</h4>
                     <p className="text-sm text-gray-400 leading-relaxed">{item.desc}</p>
                  </div>
                ))}
@@ -1051,35 +1065,35 @@ const MarketingSupport = () => (
 );
 
 const RetailerResources = () => (
-  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+  <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left">
     <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
        <div className="lg:w-1/2">
          <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
                <div className="w-10 h-[2px] bg-[#E60000]" />
-               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">ABK Academy</span>
+               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">ABK Academy</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-8 leading-tight">EMPOWERING <br/><span className="text-[#E60000]">YOUR STAFF.</span></h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-10">Knowledge drives sales. We provide comprehensive, ongoing training for your staff to ensure they confidently recommend the right products to pet parents.</p>
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-6 leading-tight">EMPOWERING <br/><span className="text-[#E60000]">YOUR STAFF.</span></h2>
+            <p className="text-gray-600 text-base leading-relaxed mb-10">Knowledge drives sales. We provide comprehensive, ongoing training for your staff to ensure they confidently recommend the right products to pet parents.</p>
             <div className="space-y-8">
                <div className="flex items-start gap-5 group cursor-default" data-cursor="hover">
                  <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#E60000] shadow-sm shrink-0 group-hover:scale-110 transition-transform"><GraduationCap size={24} /></div>
                  <div>
-                   <h4 className="font-heading font-bold text-[#111] text-xl">Product Certifications</h4>
-                   <p className="text-gray-500 text-base mt-2 leading-relaxed">Virtual modules covering ingredient profiles, nutritional science, and clinical benefits.</p>
+                   <h4 className="font-heading font-bold text-[#111] text-lg">Product Certifications</h4>
+                   <p className="text-gray-500 text-sm mt-2 leading-relaxed">Virtual modules covering ingredient profiles, nutritional science, and clinical benefits.</p>
                  </div>
                </div>
                <div className="flex items-start gap-5 group cursor-default" data-cursor="hover">
                  <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#E60000] shadow-sm shrink-0 group-hover:scale-110 transition-transform"><Megaphone size={24} /></div>
                  <div>
-                   <h4 className="font-heading font-bold text-[#111] text-xl">Grooming Masterclasses</h4>
-                   <p className="text-gray-500 text-base mt-2 leading-relaxed">On-site hardware training and maintenance seminars led by industry master groomers.</p>
+                   <h4 className="font-heading font-bold text-[#111] text-lg">Grooming Masterclasses</h4>
+                   <p className="text-gray-500 text-sm mt-2 leading-relaxed">On-site hardware training and maintenance seminars led by industry master groomers.</p>
                  </div>
                </div>
             </div>
          </FadeUpReveal>
        </div>
-       <div className="lg:w-1/2 w-full h-[400px] md:h-[600px] radius-max overflow-hidden relative shadow-xl" data-cursor="hover">
+       <div className="lg:w-1/2 w-full h-[400px] md:h-[500px] radius-max overflow-hidden relative shadow-xl" data-cursor="hover">
          <img src="https://images.unsplash.com/photo-1544531586-fde5298cdd40?auto=format&fit=crop&w=1200&q=80" alt="Training" className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000" />
        </div>
     </div>
@@ -1102,15 +1116,15 @@ const InteractiveROICalculator = () => {
           <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-[2px] bg-[#E60000]" />
-              <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Partner Benefits</span>
+              <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Partner Benefits</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter mb-6">PROJECT YOUR <br/><span className="text-[#E60000]">GROWTH.</span></h2>
-            <p className="text-gray-400 text-lg mb-10 leading-relaxed">Calculate your estimated monthly revenue potential by integrating ABK Imports' premium catalog into your retail or clinical practice.</p>
+            <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter mb-6">PROJECT YOUR <br/><span className="text-[#E60000]">GROWTH.</span></h2>
+            <p className="text-gray-400 text-base mb-10 leading-relaxed">Calculate your estimated monthly revenue potential by integrating ABK Imports' premium catalog into your retail or clinical practice.</p>
             
             <div className="bg-[#111] p-8 radius-max border border-white/10">
               <div className="flex justify-between items-end mb-6">
-                <label className="text-sm font-bold uppercase tracking-widest text-gray-400">Monthly Pet Clients</label>
-                <span className="text-3xl font-heading font-black text-white">{clients}</span>
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Monthly Pet Clients</label>
+                <span className="text-2xl font-heading font-black text-white">{clients}</span>
               </div>
               <input 
                 type="range" 
@@ -1133,14 +1147,14 @@ const InteractiveROICalculator = () => {
                 <div className="absolute -right-10 -top-10 text-white/5 group-hover:scale-110 transition-transform duration-700">
                   <BarChart3 size={150} />
                 </div>
-                <p className="text-[#E60000] text-sm font-bold uppercase tracking-widest mb-2">Est. Monthly Revenue</p>
-                <h3 className="text-5xl md:text-6xl font-heading font-black">₹{revenue.toLocaleString('en-IN')}</h3>
+                <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-2">Est. Monthly Revenue</p>
+                <h3 className="text-4xl md:text-5xl font-heading font-black">₹{revenue.toLocaleString('en-IN')}</h3>
               </div>
               
               <div className="bg-[#E60000] text-white p-10 radius-max shadow-[0_20px_50px_rgba(230,0,0,0.2)] text-left">
-                <p className="text-white/80 text-sm font-bold uppercase tracking-widest mb-2">Projected Gross Margin (35%)</p>
-                <h3 className="text-5xl md:text-6xl font-heading font-black">₹{profit.toLocaleString('en-IN')}</h3>
-                <p className="text-sm mt-6 font-medium bg-white/20 inline-block px-4 py-2 rounded-full backdrop-blur-sm">Based on industry average basket size.</p>
+                <p className="text-white/80 text-xs font-bold uppercase tracking-widest mb-2">Projected Gross Margin (35%)</p>
+                <h3 className="text-4xl md:text-5xl font-heading font-black">₹{profit.toLocaleString('en-IN')}</h3>
+                <p className="text-xs mt-6 font-medium bg-white/20 inline-block px-4 py-2 rounded-full backdrop-blur-sm">Based on industry average basket size.</p>
               </div>
             </div>
           </FadeUpReveal>
@@ -1157,10 +1171,10 @@ const InteractiveLogistics = () => {
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
              <div className="w-10 h-[2px] bg-[#E60000]" />
-             <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Operations</span>
+             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Operations</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter text-[#111] mb-6">UNMATCHED INFRASTRUCTURE.</h2>
-          <p className="text-gray-600 text-lg max-w-2xl">Real-time inventory visibility and climate-controlled routing ensure your products arrive in pristine condition.</p>
+          <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111] mb-6">UNMATCHED INFRASTRUCTURE.</h2>
+          <p className="text-gray-600 text-base max-w-2xl">Real-time inventory visibility and climate-controlled routing ensure your products arrive in pristine condition.</p>
         </FadeUpReveal>
       </div>
 
@@ -1175,8 +1189,8 @@ const InteractiveLogistics = () => {
               <div className="w-16 h-16 bg-[#FFF5F5] text-[#E60000] rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 {stat.icon}
               </div>
-              <h3 className="text-5xl font-heading font-black text-[#111] mb-2">{stat.value}<span className="text-2xl text-[#E60000] ml-1">{stat.suffix}</span></h3>
-              <h4 className="text-lg font-bold mb-3">{stat.title}</h4>
+              <h3 className="text-4xl font-heading font-black text-[#111] mb-2">{stat.value}<span className="text-xl text-[#E60000] ml-1">{stat.suffix}</span></h3>
+              <h4 className="text-base font-bold mb-3">{stat.title}</h4>
               <p className="text-sm text-gray-500">{stat.desc}</p>
             </div>
           </FadeUpReveal>
@@ -1240,20 +1254,20 @@ const GlobalNetwork = () => {
   }, [leafletLoaded]);
 
   return (
-    <section className="py-32 bg-[#050505] text-white relative overflow-hidden border-t border-white/10 text-left">
+    <section className="py-24 bg-[#050505] text-white relative overflow-hidden border-t border-white/10 text-left">
       <div className="px-[3vw] max-w-[1800px] mx-auto relative z-20">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Global Footprint</span>
+            <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Global Footprint</span>
           </div>
-          <h2 className="text-4xl md:text-6xl lg:text-[5vw] font-heading font-extrabold tracking-tighter mb-12 leading-[1]">
+          <h2 className="text-3xl md:text-5xl lg:text-[4vw] font-heading font-extrabold tracking-tighter mb-10 leading-[1]">
             SOURCING WORLDWIDE.<br/>DELIVERING <span className="text-[#E60000]">PAN-INDIA.</span>
           </h2>
         </FadeUpReveal>
 
         <FadeUpReveal delayOffset={100}>
-          <div className="w-full h-[50vh] md:h-[60vh] min-h-[400px] radius-max overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-10 bg-[#111]" data-cursor="drag">
+          <div className="w-full h-[40vh] md:h-[50vh] min-h-[350px] radius-max overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative z-10 bg-[#111]" data-cursor="drag">
             {leafletLoaded ? <div ref={mapRef} className="w-full h-full" /> : <div className="w-full h-full flex items-center justify-center text-gray-500 font-mono text-sm">Initializing Geospatial Data...</div>}
             
             <div className="absolute bottom-6 left-6 z-[400] bg-black/60 backdrop-blur-md border border-white/10 rounded-xl p-4 pointer-events-none hidden md:block text-left">
@@ -1267,19 +1281,19 @@ const GlobalNetwork = () => {
           </div>
         </FadeUpReveal>
 
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-16 relative">
+        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-white/10 pt-12 relative">
           <FadeUpReveal delayOffset={100} className="relative text-left">
-            <h4 className="text-3xl font-heading font-bold mb-4">North America</h4>
+            <h4 className="text-2xl font-heading font-bold mb-3">North America</h4>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">Partnering with industry titans in the USA and Canada to bring clinically proven nutrition, behavioral toys, and grooming tech to India.</p>
           </FadeUpReveal>
           <FadeUpReveal delayOffset={200} className="relative text-left">
-            <h4 className="text-3xl font-heading font-bold mb-4">Europe & UK</h4>
+            <h4 className="text-2xl font-heading font-bold mb-3">Europe & UK</h4>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">Sourcing premium lifestyle accessories, specialized veterinary care products, and heritage grooming brands trusted globally.</p>
           </FadeUpReveal>
           <FadeUpReveal delayOffset={300} className="relative text-left">
-            <h4 className="text-3xl font-heading font-bold mb-4">Asian Markets</h4>
+            <h4 className="text-2xl font-heading font-bold mb-3">Asian Markets</h4>
             <p className="text-gray-400 text-sm leading-relaxed max-w-sm">Leveraging high-tech manufacturing hubs for innovative toys, smart pet accessories, and highly reliable daily care items.</p>
-            <div className="mt-8 inline-flex items-center gap-3 bg-[#1A1A1A]/80 border border-white/20 rounded-full px-5 py-2.5 backdrop-blur-md">
+            <div className="mt-6 inline-flex items-center gap-3 bg-[#1A1A1A]/80 border border-white/20 rounded-full px-5 py-2.5 backdrop-blur-md">
                 <div className="w-4 h-4 bg-white rounded-full flex items-center justify-center relative"><div className="absolute inset-0 bg-[#E60000] rounded-full animate-ping opacity-50" /><div className="w-2 h-2 bg-[#E60000] rounded-full" /></div>
                 <span className="text-[11px] font-bold tracking-widest uppercase text-white">Pune Central Hub</span>
             </div>
@@ -1304,19 +1318,19 @@ const Testimonials = () => {
   }, [reviews.length]);
 
   return (
-    <section className="py-32 bg-[#111] text-white text-left px-[3vw]">
+    <section className="py-24 bg-[#111] text-white text-left px-[3vw]">
       <div className="max-w-[1800px] mx-auto">
-        <Star className="text-[#E60000] mb-10" size={48} fill="currentColor" />
-        <div className="relative h-[250px] w-full max-w-5xl">
+        <Star className="text-[#E60000] mb-8" size={40} fill="currentColor" />
+        <div className="relative h-[250px] md:h-[200px] w-full max-w-5xl">
           {reviews.map((rev, idx) => (
             <div key={idx} className={`absolute top-0 left-0 w-full transition-all duration-1000 ease-in-out ${active === idx ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8 pointer-events-none'}`}>
-              <h3 className="text-3xl md:text-5xl font-heading font-medium leading-tight mb-8">"{rev.text}"</h3>
-              <p className="font-bold text-xl">{rev.author}</p>
-              <p className="text-gray-500 uppercase tracking-widest text-sm mt-1">{rev.role}</p>
+              <h3 className="text-2xl md:text-4xl font-heading font-medium leading-tight mb-6">"{rev.text}"</h3>
+              <p className="font-bold text-lg">{rev.author}</p>
+              <p className="text-gray-500 uppercase tracking-widest text-xs mt-1">{rev.role}</p>
             </div>
           ))}
         </div>
-        <div className="flex gap-4 mt-8">
+        <div className="flex gap-4 mt-6">
           {reviews.map((_, idx) => (
             <button key={idx} onClick={() => setActive(idx)} className={`h-2 rounded-full transition-all duration-500 ${active === idx ? 'w-10 bg-[#E60000]' : 'w-2 bg-gray-600'}`} data-cursor="hover" />
           ))}
@@ -1336,15 +1350,15 @@ const FAQSection = () => {
   ];
 
   return (
-    <section className="py-32 bg-white px-[3vw] text-left">
+    <section className="py-24 bg-white px-[3vw] text-left">
       <div className="max-w-[1000px] mx-auto">
         <FadeUpReveal>
-          <div className="mb-16">
+          <div className="mb-12">
             <div className="flex items-center gap-3 mb-6">
                <div className="w-10 h-[2px] bg-[#E60000]" />
-               <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Help & Support</span>
+               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Help & Support</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter text-[#111]">FREQUENTLY ASKED.</h2>
+            <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111]">FREQUENTLY ASKED.</h2>
           </div>
         </FadeUpReveal>
 
@@ -1356,13 +1370,13 @@ const FAQSection = () => {
                 onClick={() => setOpenIdx(openIdx === idx ? -1 : idx)}
               >
                 <div className="p-6 md:p-8 flex justify-between items-center">
-                  <h4 className={`text-lg md:text-xl font-bold transition-colors ${openIdx === idx ? 'text-[#E60000]' : 'text-[#111]'}`}>{faq.q}</h4>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 ${openIdx === idx ? 'bg-[#E60000] text-white rotate-45' : 'bg-gray-100 text-gray-500'}`}>
-                    <Plus size={20} />
+                  <h4 className={`text-base md:text-lg font-bold transition-colors ${openIdx === idx ? 'text-[#E60000]' : 'text-[#111]'}`}>{faq.q}</h4>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 shrink-0 ml-4 ${openIdx === idx ? 'bg-[#E60000] text-white rotate-45' : 'bg-gray-100 text-gray-500'}`}>
+                    <Plus size={18} />
                   </div>
                 </div>
                 <div className={`px-6 md:px-8 overflow-hidden transition-all duration-500 ease-in-out ${openIdx === idx ? 'max-h-[200px] pb-8 opacity-100' : 'max-h-0 pb-0 opacity-0'}`}>
-                  <p className="text-gray-600 leading-relaxed">{faq.a}</p>
+                  <p className="text-gray-600 leading-relaxed text-sm">{faq.a}</p>
                 </div>
               </div>
             </FadeUpReveal>
@@ -1381,20 +1395,20 @@ const InsightsNews = () => {
   ];
 
   return (
-    <section className="py-32 bg-white px-[3vw] text-left">
+    <section className="py-24 bg-white px-[3vw] text-left">
       <div className="max-w-[1800px] mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
           <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-[2px] bg-[#E60000]" />
-              <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Corporate News</span>
+              <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Corporate News</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter text-[#111]">INDUSTRY INSIGHTS.</h2>
+            <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111]">INDUSTRY INSIGHTS.</h2>
           </FadeUpReveal>
           <FadeUpReveal delayOffset={100}>
-               <button className="border border-gray-300 text-black px-8 py-4 radius-max text-sm font-semibold hover:border-[#111] hover:bg-[#111] hover:text-white transition-all duration-300 w-max" data-cursor="hover">
-                 View All News
-               </button>
+             <button className="border border-gray-300 text-black px-6 py-3 radius-max text-sm font-semibold hover:border-[#111] hover:bg-[#111] hover:text-white transition-all duration-300 w-max" data-cursor="hover">
+               View All News
+             </button>
           </FadeUpReveal>
         </div>
 
@@ -1402,7 +1416,7 @@ const InsightsNews = () => {
           {articles.map((art, idx) => (
             <FadeUpReveal key={idx} delayOffset={idx * 100}>
               <div className="group cursor-pointer text-left" data-cursor="hover">
-                <div className="w-full h-[300px] radius-max overflow-hidden mb-6 relative">
+                <div className="w-full h-[250px] radius-max overflow-hidden mb-6 relative">
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                   <img src={art.img} alt={art.title} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
                   <div className="absolute top-4 left-4 z-20 bg-white px-3 py-1 radius-max text-[10px] font-bold uppercase tracking-widest text-black">
@@ -1410,7 +1424,7 @@ const InsightsNews = () => {
                   </div>
                 </div>
                 <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-3">{art.date}</p>
-                <h4 className="text-2xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors duration-300 leading-tight">
+                <h4 className="text-xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors duration-300 leading-tight">
                   {art.title}
                 </h4>
               </div>
@@ -1424,17 +1438,17 @@ const InsightsNews = () => {
 
 const WorkWithUs = () => {
   return (
-    <section id="work-with-us" className="py-32 px-[3vw] blended-bg border-y border-gray-200 text-left">
+    <section id="work-with-us" className="py-24 px-[3vw] blended-bg border-y border-gray-200 text-left">
       <div className="max-w-[1800px] mx-auto bg-white radius-max shadow-xl overflow-hidden flex flex-col md:flex-row">
-         <div className="w-full md:w-1/2 p-12 md:p-24 flex flex-col justify-center">
-            <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6">PARTNER WITH EXCELLENCE.</h2>
-            <p className="text-gray-600 text-lg mb-10 leading-relaxed">Whether you are a global brand looking to enter the Indian market, or a passionate professional seeking a career at our Savannah HQ, we want to hear from you.</p>
+         <div className="w-full md:w-1/2 p-10 md:p-20 flex flex-col justify-center">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">PARTNER WITH EXCELLENCE.</h2>
+            <p className="text-gray-600 text-base mb-8 leading-relaxed">Whether you are a global brand looking to enter the Indian market, or a passionate professional seeking a career at our Savannah HQ, we want to hear from you.</p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-[#E60000] text-white px-8 py-4 radius-max font-bold hover:bg-[#111] transition-colors w-max" data-cursor="hover">Join Our Network</button>
-              <button className="bg-transparent border border-gray-300 text-[#111] px-8 py-4 radius-max font-bold hover:border-[#111] transition-colors w-max" data-cursor="hover">View Careers</button>
+              <button className="bg-[#E60000] text-white px-6 py-3 radius-max font-bold hover:bg-[#111] transition-colors w-max text-sm" data-cursor="hover">Join Our Network</button>
+              <button className="bg-transparent border border-gray-300 text-[#111] px-6 py-3 radius-max font-bold hover:border-[#111] transition-colors w-max text-sm" data-cursor="hover">View Careers</button>
             </div>
          </div>
-         <div className="w-full md:w-1/2 h-[400px] md:h-auto">
+         <div className="w-full md:w-1/2 h-[350px] md:h-auto">
             <img src="https://images.unsplash.com/photo-1521651201144-634f700b36ef?auto=format&fit=crop&w=1200&q=80" alt="Work with ABK" className="w-full h-full object-cover grayscale-[20%]" />
          </div>
       </div>
@@ -1443,30 +1457,30 @@ const WorkWithUs = () => {
 };
 
 const BrandSpotlight = ({ navigateTo }) => (
-  <section className="py-32 bg-[#111] text-white px-[3vw] text-left">
+  <section className="py-24 bg-[#111] text-white px-[3vw] text-left">
     <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 items-center">
       <div className="lg:w-1/2">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Brand Spotlight</span>
+            <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Brand Spotlight</span>
           </div>
-          <h2 className="text-5xl md:text-7xl font-heading font-black mb-8 leading-[1]">ANDIS<br/><span className="text-gray-500">PRO.</span></h2>
-          <p className="text-xl text-gray-300 leading-relaxed mb-8 max-w-xl">As the exclusive national distributor for Andis, we empower Indian grooming professionals with world-class clipping and trimming technology built for precision.</p>
-          <div className="flex gap-12 mb-10">
+          <h2 className="text-4xl md:text-6xl font-heading font-black mb-6 leading-[1]">ANDIS<br/><span className="text-gray-500">PRO.</span></h2>
+          <p className="text-lg text-gray-300 leading-relaxed mb-8 max-w-xl">As the exclusive national distributor for Andis, we empower Indian grooming professionals with world-class clipping and trimming technology built for precision.</p>
+          <div className="flex gap-12 mb-8">
             <div>
-              <p className="text-4xl font-heading font-bold text-[#E60000]">10k+</p>
+              <p className="text-3xl font-heading font-bold text-[#E60000]">10k+</p>
               <p className="text-xs uppercase tracking-widest text-gray-500 mt-2">Salons Equipped</p>
             </div>
             <div>
-              <p className="text-4xl font-heading font-bold text-[#E60000]">100%</p>
+              <p className="text-3xl font-heading font-bold text-[#E60000]">100%</p>
               <p className="text-xs uppercase tracking-widest text-gray-500 mt-2">Authentic Spares</p>
             </div>
           </div>
-          <button onClick={() => navigateTo('Brand: Andis')} className="border border-white/30 text-white px-8 py-4 radius-max font-bold hover:bg-white hover:text-black transition-colors" data-cursor="hover">View Andis Catalog</button>
+          <button onClick={() => navigateTo('Brand: Andis')} className="border border-white/30 text-white px-8 py-3 radius-max font-bold hover:bg-white hover:text-black transition-colors text-sm" data-cursor="hover">View Andis Catalog</button>
         </FadeUpReveal>
       </div>
-      <div className="lg:w-1/2 h-[500px] lg:h-[700px] w-full relative radius-max overflow-hidden" data-cursor="hover">
+      <div className="lg:w-1/2 h-[450px] lg:h-[600px] w-full relative radius-max overflow-hidden" data-cursor="hover">
         <img src="https://images.unsplash.com/photo-1585559606675-01e141a02fb4?auto=format&fit=crop&w=1200&q=80" alt="Andis" className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-[1.5s] grayscale-[20%]" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#111]/80 via-transparent to-transparent pointer-events-none" />
       </div>
@@ -1481,26 +1495,26 @@ const NewArrivals = () => {
     { name: "Nylabone", category: "Toys", desc: "Durable chew toys & dental solutions.", img: "https://images.unsplash.com/photo-1541599540903-216a46ca1dc0?auto=format&fit=crop&w=600&q=80" },
   ];
   return (
-    <section className="py-32 bg-[#FAFAFA] px-[3vw]">
+    <section className="py-24 bg-[#FAFAFA] px-[3vw]">
        <div className="max-w-[1800px] mx-auto text-left">
           <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-[2px] bg-[#E60000]" />
-              <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Just Landed</span>
+              <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Just Landed</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">NEW ARRIVALS.</h2>
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">NEW ARRIVALS.</h2>
           </FadeUpReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {arrivals.map((brand, i) => (
               <FadeUpReveal key={i} delayOffset={i*150}>
-                <div className="group cursor-pointer bg-white p-6 radius-max border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-cursor="hover">
-                  <div className="w-full aspect-[4/3] overflow-hidden radius-max mb-6 relative">
-                    <div className="absolute top-4 left-4 z-20 bg-[#E60000] text-white px-4 py-1.5 radius-max text-[10px] font-bold uppercase tracking-widest shadow-md">New</div>
+                <div className="group cursor-pointer bg-white p-5 radius-max border border-gray-100 hover:shadow-xl transition-all duration-500 hover:-translate-y-2" data-cursor="hover">
+                  <div className="w-full aspect-[4/3] overflow-hidden radius-max mb-5 relative">
+                    <div className="absolute top-4 left-4 z-20 bg-[#E60000] text-white px-3 py-1 radius-max text-[10px] font-bold uppercase tracking-widest shadow-md">New</div>
                     <img src={brand.img} alt={brand.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                   </div>
-                  <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-2">{brand.category}</p>
-                  <h4 className="text-2xl font-heading font-bold text-[#111] mb-2">{brand.name}</h4>
-                  <p className="text-gray-500">{brand.desc}</p>
+                  <p className="text-[#E60000] text-[10px] font-bold uppercase tracking-widest mb-1">{brand.category}</p>
+                  <h4 className="text-xl font-heading font-bold text-[#111] mb-2">{brand.name}</h4>
+                  <p className="text-gray-500 text-sm">{brand.desc}</p>
                 </div>
               </FadeUpReveal>
             ))}
@@ -1517,22 +1531,22 @@ const SelectionCriteria = () => {
     { title: "Market Viability", desc: "Rigorous market analysis ensures every brand we introduce strongly resonates with the evolving needs of Indian pet parents." }
   ];
   return (
-     <section className="py-32 bg-white px-[3vw]">
+     <section className="py-24 bg-white px-[3vw]">
         <div className="max-w-[1800px] mx-auto text-left">
           <FadeUpReveal>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-[2px] bg-[#E60000]" />
-              <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Curation Process</span>
+              <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Curation Process</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-20 max-w-4xl">HOW WE SELECT <span className="text-[#E60000]">OUR PARTNERS.</span></h2>
+            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-16 max-w-4xl">HOW WE SELECT <span className="text-[#E60000]">OUR PARTNERS.</span></h2>
           </FadeUpReveal>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-24">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
              {criteria.map((item, i) => (
                <FadeUpReveal key={i} delayOffset={i * 150}>
-                 <div className="border-t border-gray-200 pt-10" data-cursor="hover">
-                   <h4 className="text-6xl font-heading font-black text-gray-100 mb-8 transition-colors group-hover:text-[#E60000]">0{i+1}</h4>
-                   <h3 className="text-2xl font-heading font-bold text-[#111] mb-4">{item.title}</h3>
-                   <p className="text-gray-600 leading-relaxed text-lg">{item.desc}</p>
+                 <div className="border-t border-gray-200 pt-8" data-cursor="hover">
+                   <h4 className="text-5xl font-heading font-black text-gray-100 mb-6 transition-colors group-hover:text-[#E60000]">0{i+1}</h4>
+                   <h3 className="text-xl font-heading font-bold text-[#111] mb-3">{item.title}</h3>
+                   <p className="text-gray-600 leading-relaxed text-sm">{item.desc}</p>
                  </div>
                </FadeUpReveal>
              ))}
@@ -1543,17 +1557,17 @@ const SelectionCriteria = () => {
 };
 
 const OurMissionVision = () => (
-  <section className="py-32 px-[3vw] bg-white text-left">
+  <section className="py-24 px-[3vw] bg-white text-left">
     <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
       <FadeUpReveal className="flex-1">
-        <h3 className="text-sm font-bold tracking-widest text-[#E60000] uppercase mb-6 flex items-center gap-4"><div className="w-8 h-[2px] bg-[#E60000]"></div>Our Mission</h3>
-        <h2 className="text-4xl md:text-5xl font-heading font-black text-[#111] mb-6 leading-tight">Setting a New Standard for Pet Wellbeing.</h2>
-        <p className="text-gray-600 text-lg leading-relaxed mb-8">We are dedicated to enriching the lives of pets by providing Indian pet parents and professionals with uninterrupted access to the world's most trusted, clinically proven, and innovative pet care products.</p>
+        <h3 className="text-xs font-bold tracking-widest text-[#E60000] uppercase mb-6 flex items-center gap-4"><div className="w-8 h-[2px] bg-[#E60000]"></div>Our Mission</h3>
+        <h2 className="text-3xl md:text-4xl font-heading font-black text-[#111] mb-6 leading-tight">Setting a New Standard for Pet Wellbeing.</h2>
+        <p className="text-gray-600 text-base leading-relaxed mb-8">We are dedicated to enriching the lives of pets by providing Indian pet parents and professionals with uninterrupted access to the world's most trusted, clinically proven, and innovative pet care products.</p>
       </FadeUpReveal>
       <FadeUpReveal className="flex-1" delayOffset={200}>
-        <h3 className="text-sm font-bold tracking-widest text-[#E60000] uppercase mb-6 flex items-center gap-4"><div className="w-8 h-[2px] bg-[#E60000]"></div>Our Vision</h3>
-        <h2 className="text-4xl md:text-5xl font-heading font-black text-[#111] mb-6 leading-tight">An Ecosystem of Global Excellence.</h2>
-        <p className="text-gray-600 text-lg leading-relaxed">By 2030, we aim to be the backbone of the Asian pet care industry, integrating tech-driven logistics with uncompromising quality assurance to empower every clinic, salon, and retail partner nationwide.</p>
+        <h3 className="text-xs font-bold tracking-widest text-[#E60000] uppercase mb-6 flex items-center gap-4"><div className="w-8 h-[2px] bg-[#E60000]"></div>Our Vision</h3>
+        <h2 className="text-3xl md:text-4xl font-heading font-black text-[#111] mb-6 leading-tight">An Ecosystem of Global Excellence.</h2>
+        <p className="text-gray-600 text-base leading-relaxed">By 2030, we aim to be the backbone of the Asian pet care industry, integrating tech-driven logistics with uncompromising quality assurance to empower every clinic, salon, and retail partner nationwide.</p>
       </FadeUpReveal>
     </div>
   </section>
@@ -1566,25 +1580,25 @@ const LeadershipTeam = () => {
     { name: "David M.", role: "Head of Global Sourcing", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=800&q=80" },
   ];
   return (
-    <section className="py-32 bg-[#FAFAFA] px-[3vw]">
+    <section className="py-24 bg-[#FAFAFA] px-[3vw]">
       <div className="max-w-[1800px] mx-auto text-left">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
              <div className="w-10 h-[2px] bg-[#E60000]" />
-             <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">The Minds Behind ABK</span>
+             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">The Minds Behind ABK</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">LEADERSHIP.</h2>
+          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">LEADERSHIP.</h2>
         </FadeUpReveal>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {team.map((member, i) => (
             <FadeUpReveal key={i} delayOffset={i*150}>
               <div className="group cursor-pointer" data-cursor="hover">
-                <div className="w-full aspect-[4/5] overflow-hidden radius-max mb-6 relative shadow-lg">
+                <div className="w-full aspect-[4/5] overflow-hidden radius-max mb-5 relative shadow-lg">
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                     <img src={member.img} alt={member.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 grayscale group-hover:grayscale-0" />
                 </div>
-                <h4 className="text-2xl font-heading font-bold text-[#111]">{member.name}</h4>
-                <p className="text-[#E60000] text-sm font-bold uppercase tracking-widest mt-2">{member.role}</p>
+                <h4 className="text-xl font-heading font-bold text-[#111]">{member.name}</h4>
+                <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mt-1">{member.role}</p>
               </div>
             </FadeUpReveal>
           ))}
@@ -1603,49 +1617,49 @@ const PartnershipPhilosophy = () => (
     <div className="max-w-[1800px] mx-auto relative z-10 text-left">
       <FadeUpReveal>
         <div className="w-10 h-[2px] bg-[#E60000] mb-6" />
-        <h2 className="text-4xl md:text-6xl lg:text-7xl font-heading font-black mb-10 max-w-4xl leading-[1.1]">
+        <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-black mb-8 max-w-4xl leading-[1.1]">
           WE DON'T JUST DISTRIBUTE.<br/><span className="text-[#E60000]">WE BUILD MARKETS.</span>
         </h2>
-        <p className="text-xl text-gray-300 max-w-2xl leading-relaxed mb-12">Our philosophy goes beyond the simple transaction. When we introduce a global brand to the Indian market, we act as their local custodian—investing heavily in education, market awareness, and brand equity to guarantee long-term success.</p>
-        <button className="border border-white/30 text-white px-8 py-4 radius-max text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors" data-cursor="hover">View Partner Case Studies</button>
+        <p className="text-lg text-gray-300 max-w-2xl leading-relaxed mb-10">Our philosophy goes beyond the simple transaction. When we introduce a global brand to the Indian market, we act as their local custodian—investing heavily in education, market awareness, and brand equity to guarantee long-term success.</p>
+        <button className="border border-white/30 text-white px-8 py-3 radius-max text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors" data-cursor="hover">View Partner Case Studies</button>
       </FadeUpReveal>
     </div>
   </section>
 );
 
 const FacilityShowcase = () => (
-  <section className="py-32 bg-white px-[3vw]">
+  <section className="py-24 bg-white px-[3vw]">
     <div className="max-w-[1800px] mx-auto text-left">
       <FadeUpReveal>
         <div className="flex items-center gap-3 mb-6">
            <div className="w-10 h-[2px] bg-[#E60000]" />
-           <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Scale & Security</span>
+           <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Scale & Security</span>
         </div>
-        <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">INFRASTRUCTURE.</h2>
+        <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">INFRASTRUCTURE.</h2>
       </FadeUpReveal>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-auto lg:h-[600px]">
-        <FadeUpReveal delayOffset={100} className="radius-max overflow-hidden relative group h-[400px] lg:h-full cursor-pointer" data-cursor="hover">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-auto lg:h-[500px]">
+        <FadeUpReveal delayOffset={100} className="radius-max overflow-hidden relative group h-[350px] lg:h-full cursor-pointer" data-cursor="hover">
             <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80" alt="Warehouse" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-            <div className="absolute bottom-10 left-10 text-white pr-10">
-              <p className="text-[#E60000] text-sm font-bold tracking-widest uppercase mb-3">Pune, MH</p>
-              <h3 className="text-3xl md:text-4xl font-heading font-bold mb-3">Central Distribution HQ</h3>
-              <p className="text-gray-300">Over 150,000 sq ft of climate-controlled inventory space.</p>
+            <div className="absolute bottom-8 left-8 text-white pr-8">
+              <p className="text-[#E60000] text-xs font-bold tracking-widest uppercase mb-2">Pune, MH</p>
+              <h3 className="text-2xl md:text-3xl font-heading font-bold mb-2">Central Distribution HQ</h3>
+              <p className="text-gray-300 text-sm">Over 150,000 sq ft of climate-controlled inventory space.</p>
             </div>
         </FadeUpReveal>
-        <div className="flex flex-col gap-8 h-auto lg:h-full">
-            <FadeUpReveal delayOffset={200} className="flex-1 radius-max overflow-hidden relative group h-[300px] lg:h-auto cursor-pointer" data-cursor="hover">
+        <div className="flex flex-col gap-6 h-auto lg:h-full">
+            <FadeUpReveal delayOffset={200} className="flex-1 radius-max overflow-hidden relative group h-[250px] lg:h-auto cursor-pointer" data-cursor="hover">
               <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80" alt="Tech" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
-              <div className="absolute bottom-10 left-10 text-white pr-10">
-                <h3 className="text-2xl md:text-3xl font-heading font-bold mb-3">Cold-Chain Network</h3>
-                <p className="text-gray-300">Ensuring clinical nutrition efficacy across all delivery zones.</p>
+              <div className="absolute bottom-8 left-8 text-white pr-8">
+                <h3 className="text-xl md:text-2xl font-heading font-bold mb-2">Cold-Chain Network</h3>
+                <p className="text-gray-300 text-sm">Ensuring clinical nutrition efficacy across all delivery zones.</p>
               </div>
             </FadeUpReveal>
-            <FadeUpReveal delayOffset={300} className="flex-1 bg-[#F9F9F9] radius-max p-10 flex flex-col justify-center border border-gray-100">
-              <Box size={40} className="text-[#E60000] mb-6" />
-              <h3 className="text-2xl md:text-3xl font-heading font-bold text-[#111] mb-4">Scalable Capacity</h3>
-              <p className="text-gray-600 leading-relaxed text-lg">Our proprietary warehouse management system (WMS) handles over 10,000 pallets, enabling 99.8% on-time fulfillment rates across pan-India orders.</p>
+            <FadeUpReveal delayOffset={300} className="flex-1 bg-[#F9F9F9] radius-max p-8 flex flex-col justify-center border border-gray-100">
+              <Box size={32} className="text-[#E60000] mb-4" />
+              <h3 className="text-xl md:text-2xl font-heading font-bold text-[#111] mb-3">Scalable Capacity</h3>
+              <p className="text-gray-600 leading-relaxed text-sm md:text-base">Our proprietary warehouse management system (WMS) handles over 10,000 pallets, enabling 99.8% on-time fulfillment rates across pan-India orders.</p>
             </FadeUpReveal>
         </div>
       </div>
@@ -1654,24 +1668,24 @@ const FacilityShowcase = () => (
 );
 
 const SustainabilityCommitment = () => (
-  <section className="py-24 bg-[#E60000] text-white px-[3vw]">
-    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-16 text-left">
+  <section className="py-20 bg-[#E60000] text-white px-[3vw]">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 text-left">
         <div className="lg:w-1/2">
           <FadeUpReveal>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-black mb-6 leading-[1.1]">COMMITTED TO A <br/>GREENER FUTURE.</h2>
-            <p className="text-white/90 text-lg leading-relaxed max-w-xl">We are continuously optimizing our logistics to reduce our carbon footprint. From utilizing 100% recyclable packaging materials in our warehouse to deploying route-optimization AI for our delivery fleet.</p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-black mb-4 leading-[1.1]">COMMITTED TO A <br/>GREENER FUTURE.</h2>
+            <p className="text-white/90 text-base leading-relaxed max-w-xl">We are continuously optimizing our logistics to reduce our carbon footprint. From utilizing 100% recyclable packaging materials in our warehouse to deploying route-optimization AI for our delivery fleet.</p>
           </FadeUpReveal>
         </div>
         <div className="lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-          <FadeUpReveal delayOffset={100} className="bg-white/10 p-10 radius-max backdrop-blur-sm border border-white/20 hover:-translate-y-2 transition-transform duration-500" data-cursor="hover">
-              <h4 className="text-6xl font-heading font-black mb-3">-40%</h4>
-              <p className="text-sm font-bold uppercase tracking-widest text-white/80">Emission Reduction</p>
-              <p className="text-xs text-white/60 mt-4 leading-relaxed">Achieved since 2020 through fleet optimization.</p>
+          <FadeUpReveal delayOffset={100} className="bg-white/10 p-8 radius-max backdrop-blur-sm border border-white/20 hover:-translate-y-2 transition-transform duration-500" data-cursor="hover">
+              <h4 className="text-5xl font-heading font-black mb-2">-40%</h4>
+              <p className="text-xs font-bold uppercase tracking-widest text-white/80">Emission Reduction</p>
+              <p className="text-xs text-white/60 mt-3 leading-relaxed">Achieved since 2020 through fleet optimization.</p>
           </FadeUpReveal>
-          <FadeUpReveal delayOffset={200} className="bg-white/10 p-10 radius-max backdrop-blur-sm border border-white/20 hover:-translate-y-2 transition-transform duration-500" data-cursor="hover">
-              <h4 className="text-6xl font-heading font-black mb-3">100%</h4>
-              <p className="text-sm font-bold uppercase tracking-widest text-white/80">Recyclable Fillers</p>
-              <p className="text-xs text-white/60 mt-4 leading-relaxed">Eliminated single-use plastics from B2B packaging.</p>
+          <FadeUpReveal delayOffset={200} className="bg-white/10 p-8 radius-max backdrop-blur-sm border border-white/20 hover:-translate-y-2 transition-transform duration-500" data-cursor="hover">
+              <h4 className="text-5xl font-heading font-black mb-2">100%</h4>
+              <p className="text-xs font-bold uppercase tracking-widest text-white/80">Recyclable Fillers</p>
+              <p className="text-xs text-white/60 mt-3 leading-relaxed">Eliminated single-use plastics from B2B packaging.</p>
           </FadeUpReveal>
         </div>
     </div>
@@ -1687,21 +1701,21 @@ const AwardsAndRecognitions = () => {
     { title: "Supply Chain Resilience Award", year: "2022" }
   ];
   return (
-    <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+    <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left">
       <div className="max-w-[1800px] mx-auto">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
              <div className="w-10 h-[2px] bg-[#E60000]" />
-             <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Industry Accolades</span>
+             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Industry Accolades</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-12">RECOGNITIONS.</h2>
+          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-10">RECOGNITIONS.</h2>
         </FadeUpReveal>
         <div className="flex flex-wrap gap-4">
           {awards.map((award, i) => (
             <FadeUpReveal key={i} delayOffset={i*100}>
-              <div className="bg-white border border-gray-200 text-[#111] px-8 py-5 radius-max hover:border-[#E60000] hover:shadow-xl transition-all duration-300 cursor-default group" data-cursor="hover">
-                  <p className="text-[#E60000] font-bold text-xs tracking-widest mb-1">{award.year}</p>
-                  <h4 className="font-heading font-bold text-lg">{award.title}</h4>
+              <div className="bg-white border border-gray-200 text-[#111] px-6 py-4 radius-max hover:border-[#E60000] hover:shadow-xl transition-all duration-300 cursor-default group" data-cursor="hover">
+                  <p className="text-[#E60000] font-bold text-[10px] tracking-widest mb-1">{award.year}</p>
+                  <h4 className="font-heading font-bold text-base">{award.title}</h4>
               </div>
             </FadeUpReveal>
           ))}
@@ -1712,17 +1726,17 @@ const AwardsAndRecognitions = () => {
 };
 
 const CompanyCulture = () => (
-  <section className="py-32 bg-white px-[3vw] text-left">
+  <section className="py-24 bg-white px-[3vw] text-left">
     <div className="max-w-[1800px] mx-auto">
-      <FadeUpReveal className="mb-16">
+      <FadeUpReveal className="mb-12">
          <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Life at ABK</span>
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Life at ABK</span>
          </div>
-         <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-6">DRIVEN BY <span className="text-[#E60000]">PASSION.</span></h2>
-         <p className="text-gray-600 text-xl max-w-3xl leading-relaxed">We are a collective of pet enthusiasts, supply chain experts, and brand builders. Our culture is rooted in continuous learning, radical ownership, and a shared mission to elevate animal welfare globally.</p>
+         <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-6">DRIVEN BY <span className="text-[#E60000]">PASSION.</span></h2>
+         <p className="text-gray-600 text-lg max-w-3xl leading-relaxed">We are a collective of pet enthusiasts, supply chain experts, and brand builders. Our culture is rooted in continuous learning, radical ownership, and a shared mission to elevate animal welfare globally.</p>
       </FadeUpReveal>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[400px]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[350px]">
          <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover radius-max shadow-md" alt="Office" />
          <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover radius-max shadow-md md:-translate-y-8" alt="Team" />
          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover radius-max shadow-md" alt="Collaboration" />
@@ -1732,26 +1746,26 @@ const CompanyCulture = () => (
 );
 
 const EmployeeBenefits = () => (
-  <section className="py-32 bg-[#050505] text-white px-[3vw] text-left relative overflow-hidden">
+  <section className="py-24 bg-[#050505] text-white px-[3vw] text-left relative overflow-hidden">
     <div className="max-w-[1800px] mx-auto relative z-10">
       <FadeUpReveal>
          <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Perks & Rewards</span>
+            <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Perks & Rewards</span>
          </div>
-         <h2 className="text-4xl md:text-6xl font-heading font-black mb-16">WHY JOIN <span className="text-[#E60000]">OUR TEAM.</span></h2>
+         <h2 className="text-3xl md:text-5xl font-heading font-black mb-12">WHY JOIN <span className="text-[#E60000]">OUR TEAM.</span></h2>
       </FadeUpReveal>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
          {[
-           { icon: <Coffee />, title: "Pet-Friendly HQ", desc: "Bring your furry best friend to work. Our offices are designed for pets." },
-           { icon: <ShieldCheck />, title: "Comprehensive Care", desc: "Top-tier health, dental, and vision insurance for you and your family." },
-           { icon: <Globe />, title: "Remote Flexibility", desc: "Hybrid work structures giving you the freedom to work where you thrive." },
-           { icon: <GraduationCap />, title: "Growth Stipend", desc: "Annual budgets dedicated to your professional development and courses." }
+           { icon: <Coffee size={24} />, title: "Pet-Friendly HQ", desc: "Bring your furry best friend to work. Our offices are designed for pets." },
+           { icon: <ShieldCheck size={24} />, title: "Comprehensive Care", desc: "Top-tier health, dental, and vision insurance for you and your family." },
+           { icon: <Globe size={24} />, title: "Remote Flexibility", desc: "Hybrid work structures giving you the freedom to work where you thrive." },
+           { icon: <GraduationCap size={24} />, title: "Growth Stipend", desc: "Annual budgets dedicated to your professional development and courses." }
          ].map((benefit, i) => (
            <FadeUpReveal key={i} delayOffset={i * 100}>
-             <div className="bg-[#111] p-8 radius-max border border-white/10 hover:border-[#E60000] transition-colors h-full">
-                <div className="text-[#E60000] mb-6">{benefit.icon}</div>
-                <h3 className="text-xl font-heading font-bold mb-3">{benefit.title}</h3>
+             <div className="bg-[#111] p-6 radius-max border border-white/10 hover:border-[#E60000] transition-colors h-full">
+                <div className="text-[#E60000] mb-5">{benefit.icon}</div>
+                <h3 className="text-lg font-heading font-bold mb-2">{benefit.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{benefit.desc}</p>
              </div>
            </FadeUpReveal>
@@ -1769,27 +1783,27 @@ const OpenPositions = () => {
     { title: "Key Account Executive", dept: "Sales", loc: "Delhi NCR", type: "Full-Time" }
   ];
   return (
-    <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+    <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left">
       <div className="max-w-[1200px] mx-auto">
         <FadeUpReveal>
            <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-[2px] bg-[#E60000]" />
-              <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Opportunities</span>
+              <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Opportunities</span>
            </div>
-           <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-12">OPEN <span className="text-[#E60000]">ROLES.</span></h2>
+           <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-10">OPEN <span className="text-[#E60000]">ROLES.</span></h2>
         </FadeUpReveal>
         <div className="flex flex-col gap-4">
           {jobs.map((job, i) => (
             <FadeUpReveal key={i} delayOffset={i * 100}>
-              <div className="bg-white border border-gray-200 radius-max p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition-all duration-300 group cursor-pointer" data-cursor="hover">
+              <div className="bg-white border border-gray-200 radius-max p-5 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-center hover:shadow-xl transition-all duration-300 group cursor-pointer" data-cursor="hover">
                 <div>
-                  <h3 className="text-2xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors mb-2">{job.title}</h3>
-                  <div className="flex flex-wrap gap-4 text-sm font-medium text-gray-500 uppercase tracking-widest">
-                    <span className="flex items-center gap-1"><Briefcase size={14}/> {job.dept}</span>
-                    <span className="flex items-center gap-1"><MapPin size={14}/> {job.loc}</span>
+                  <h3 className="text-xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors mb-2">{job.title}</h3>
+                  <div className="flex flex-wrap gap-4 text-xs font-medium text-gray-500 uppercase tracking-widest">
+                    <span className="flex items-center gap-1"><Briefcase size={12}/> {job.dept}</span>
+                    <span className="flex items-center gap-1"><MapPin size={12}/> {job.loc}</span>
                   </div>
                 </div>
-                <button className="mt-6 md:mt-0 bg-[#111] text-white px-8 py-3 radius-max font-bold text-sm group-hover:bg-[#E60000] transition-colors">Apply Now</button>
+                <button className="mt-4 md:mt-0 bg-[#111] text-white px-6 py-2.5 radius-max font-bold text-xs group-hover:bg-[#E60000] transition-colors">Apply Now</button>
               </div>
             </FadeUpReveal>
           ))}
@@ -1800,26 +1814,26 @@ const OpenPositions = () => {
 };
 
 const PartnerApplicationProcess = () => (
-  <section className="py-32 bg-white px-[3vw] text-left border-b border-gray-100">
+  <section className="py-24 bg-white px-[3vw] text-left border-b border-gray-100">
     <div className="max-w-[1800px] mx-auto">
       <FadeUpReveal>
          <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">For Global Brands</span>
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">For Global Brands</span>
          </div>
-         <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">BECOME A <span className="text-[#E60000]">DISTRIBUTION PARTNER.</span></h2>
+         <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">BECOME A <span className="text-[#E60000]">DISTRIBUTION PARTNER.</span></h2>
       </FadeUpReveal>
-      <div className="flex flex-col lg:flex-row gap-12">
+      <div className="flex flex-col lg:flex-row gap-10">
         {[
           { step: "01", title: "Submit Brand Dossier", desc: "Provide your brand guidelines, clinical data, and target demographic analysis for the Indian market." },
           { step: "02", title: "Compliance Audit", desc: "Our legal team verifies your formulations and manufacturing standards against Indian regulatory frameworks." },
           { step: "03", title: "Launch Strategy", desc: "We co-develop a go-to-market strategy, integrating your brand into our pan-India logistics network." }
         ].map((item, i) => (
           <FadeUpReveal key={i} delayOffset={i * 150} className="flex-1">
-             <div className="border-l-4 border-gray-100 pl-8 hover:border-[#E60000] transition-colors py-4">
-                <h4 className="text-5xl font-heading font-black text-gray-200 mb-4">{item.step}</h4>
-                <h3 className="text-xl font-heading font-bold text-[#111] mb-3">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+             <div className="border-l-4 border-gray-100 pl-6 hover:border-[#E60000] transition-colors py-3">
+                <h4 className="text-4xl font-heading font-black text-gray-200 mb-3">{item.step}</h4>
+                <h3 className="text-lg font-heading font-bold text-[#111] mb-2">{item.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">{item.desc}</p>
              </div>
           </FadeUpReveal>
         ))}
@@ -1829,18 +1843,18 @@ const PartnerApplicationProcess = () => (
 );
 
 const SupplierStandards = () => (
-  <section className="py-32 bg-[#E60000] text-white px-[3vw] text-left">
+  <section className="py-24 bg-[#E60000] text-white px-[3vw] text-left">
     <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row gap-16 items-center">
       <div className="md:w-1/2">
         <FadeUpReveal>
-           <h2 className="text-5xl md:text-7xl font-heading font-black tracking-tighter mb-8 leading-[0.9]">UNCOMPROMISING<br/>STANDARDS.</h2>
-           <p className="text-white/90 text-lg max-w-lg leading-relaxed mb-8">We expect our global partners to adhere to the highest ethical and manufacturing standards. ABK Imports maintains a zero-tolerance policy for unethical sourcing, unsustainable manufacturing, or unverified clinical claims.</p>
-           <button className="border border-white/50 px-8 py-4 radius-max text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-[#E60000] transition-colors" data-cursor="hover">Read Supplier Code of Conduct</button>
+           <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter mb-6 leading-[0.9]">UNCOMPROMISING<br/>STANDARDS.</h2>
+           <p className="text-white/90 text-base max-w-lg leading-relaxed mb-8">We expect our global partners to adhere to the highest ethical and manufacturing standards. ABK Imports maintains a zero-tolerance policy for unethical sourcing, unsustainable manufacturing, or unverified clinical claims.</p>
+           <button className="border border-white/50 px-6 py-3 radius-max text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-[#E60000] transition-colors" data-cursor="hover">Read Supplier Code of Conduct</button>
         </FadeUpReveal>
       </div>
       <div className="md:w-1/2 grid grid-cols-2 gap-4">
-        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80" className="w-full h-48 md:h-64 object-cover radius-max opacity-80 mix-blend-multiply" alt="Lab" />
-        <img src="https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&w=600&q=80" className="w-full h-48 md:h-64 object-cover radius-max mt-8 opacity-80 mix-blend-multiply" alt="Research" />
+        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=600&q=80" className="w-full h-40 md:h-56 object-cover radius-max opacity-80 mix-blend-multiply" alt="Lab" />
+        <img src="https://images.unsplash.com/photo-1532619675605-1ede6c2ed2b0?auto=format&fit=crop&w=600&q=80" className="w-full h-40 md:h-56 object-cover radius-max mt-8 opacity-80 mix-blend-multiply" alt="Research" />
       </div>
     </div>
   </section>
@@ -1855,15 +1869,15 @@ const WorkspaceGallery = () => {
     "https://images.unsplash.com/photo-1556761175-5973dc0f32d7?auto=format&fit=crop&w=800&q=80",
   ];
   return (
-    <section className="py-24 bg-white overflow-hidden text-left border-y border-gray-100">
-       <div className="px-[3vw] mb-12 max-w-[1800px] mx-auto">
+    <section className="py-20 bg-white overflow-hidden text-left border-y border-gray-100">
+       <div className="px-[3vw] mb-10 max-w-[1800px] mx-auto">
          <FadeUpReveal>
-            <h2 className="text-3xl font-heading font-black text-[#111]">INSIDE ABK.</h2>
+            <h2 className="text-2xl font-heading font-black text-[#111]">INSIDE ABK.</h2>
          </FadeUpReveal>
        </div>
-       <div className="flex animate-marquee whitespace-nowrap gap-6 w-max px-[3vw]">
+       <div className="flex animate-marquee whitespace-nowrap gap-4 w-max px-[3vw]">
           {[...images, ...images].map((img, i) => (
-            <div key={i} className="w-[300px] md:w-[500px] h-[200px] md:h-[350px] radius-max overflow-hidden shrink-0" data-cursor="drag">
+            <div key={i} className="w-[250px] md:w-[400px] h-[180px] md:h-[280px] radius-max overflow-hidden shrink-0" data-cursor="drag">
               <img src={img} alt="Workspace" className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 grayscale-[20%] hover:grayscale-0" />
             </div>
           ))}
@@ -1873,27 +1887,27 @@ const WorkspaceGallery = () => {
 };
 
 const ContactLocations = () => (
-  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+  <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left">
     <div className="max-w-[1800px] mx-auto">
       <FadeUpReveal>
         <div className="flex items-center gap-3 mb-6">
            <div className="w-10 h-[2px] bg-[#E60000]" />
-           <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Our Network</span>
+           <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Our Network</span>
         </div>
-        <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">REGIONAL <span className="text-[#E60000]">HUBS.</span></h2>
+        <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">REGIONAL <span className="text-[#E60000]">HUBS.</span></h2>
       </FadeUpReveal>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
           { city: "Pune (HQ)", role: "Global Operations & Central Dist.", address: "Gera Imperium Alpha, Kharadi, Pune, Maharashtra 411014" },
           { city: "Delhi NCR", role: "North India Regional Hub", address: "Logistics Park, Sector 8, Manesar, Haryana 122051" },
           { city: "Bangalore", role: "South India Regional Hub", address: "Tech Park, Electronic City Phase 1, Bangalore, Karnataka 560100" }
         ].map((loc, i) => (
           <FadeUpReveal key={i} delayOffset={i * 100}>
-            <div className="bg-white p-8 md:p-10 radius-max border border-gray-200 hover:shadow-xl hover:border-[#E60000] transition-all duration-300 group h-full flex flex-col" data-cursor="hover">
-              <div className="w-12 h-12 bg-[#FFF5F5] rounded-full flex items-center justify-center text-[#E60000] mb-6 group-hover:scale-110 transition-transform"><MapPin size={24} /></div>
-              <h3 className="text-2xl font-heading font-bold text-[#111] mb-2">{loc.city}</h3>
-              <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-4">{loc.role}</p>
-              <p className="text-gray-600 leading-relaxed mt-auto">{loc.address}</p>
+            <div className="bg-white p-6 md:p-8 radius-max border border-gray-200 hover:shadow-xl hover:border-[#E60000] transition-all duration-300 group h-full flex flex-col" data-cursor="hover">
+              <div className="w-10 h-10 bg-[#FFF5F5] rounded-full flex items-center justify-center text-[#E60000] mb-5 group-hover:scale-110 transition-transform"><MapPin size={20} /></div>
+              <h3 className="text-xl font-heading font-bold text-[#111] mb-2">{loc.city}</h3>
+              <p className="text-[#E60000] text-[10px] font-bold uppercase tracking-widest mb-3">{loc.role}</p>
+              <p className="text-gray-600 leading-relaxed mt-auto text-sm">{loc.address}</p>
             </div>
           </FadeUpReveal>
         ))}
@@ -1903,26 +1917,26 @@ const ContactLocations = () => (
 );
 
 const SupportMatrix = () => (
-  <section className="py-32 bg-white px-[3vw] text-left border-b border-gray-100">
+  <section className="py-24 bg-white px-[3vw] text-left border-b border-gray-100">
     <div className="max-w-[1800px] mx-auto">
       <FadeUpReveal>
         <div className="flex items-center gap-3 mb-6">
            <div className="w-10 h-[2px] bg-[#E60000]" />
-           <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Directory</span>
+           <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Directory</span>
         </div>
-        <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">DEPARTMENT <span className="text-[#E60000]">ROUTING.</span></h2>
+        <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">DEPARTMENT <span className="text-[#E60000]">ROUTING.</span></h2>
       </FadeUpReveal>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
-          { icon: <Truck size={28}/>, name: "Supply Chain & Logistics", email: "logistics@abkimports.com", phone: "+91 800 555 0199" },
-          { icon: <Briefcase size={28}/>, name: "Sales & New Partnerships", email: "sales@abkimports.com", phone: "+91 800 555 0198" },
-          { icon: <FileText size={28}/>, name: "Accounts & Billing", email: "billing@abkimports.com", phone: "+91 800 555 0197" }
+          { icon: <Truck size={24}/>, name: "Supply Chain & Logistics", email: "logistics@abkimports.com", phone: "+91 800 555 0199" },
+          { icon: <Briefcase size={24}/>, name: "Sales & New Partnerships", email: "sales@abkimports.com", phone: "+91 800 555 0198" },
+          { icon: <FileText size={24}/>, name: "Accounts & Billing", email: "billing@abkimports.com", phone: "+91 800 555 0197" }
         ].map((dept, i) => (
           <FadeUpReveal key={i} delayOffset={i * 100}>
-            <div className="border-l-4 border-gray-100 pl-8 py-2 hover:border-[#E60000] transition-colors group" data-cursor="hover">
-              <div className="text-gray-300 group-hover:text-[#E60000] transition-colors mb-4">{dept.icon}</div>
-              <h3 className="text-xl font-heading font-bold text-[#111] mb-4">{dept.name}</h3>
-              <p className="text-gray-600 mb-1">{dept.email}</p>
+            <div className="border-l-4 border-gray-100 pl-6 py-2 hover:border-[#E60000] transition-colors group" data-cursor="hover">
+              <div className="text-gray-300 group-hover:text-[#E60000] transition-colors mb-3">{dept.icon}</div>
+              <h3 className="text-lg font-heading font-bold text-[#111] mb-2">{dept.name}</h3>
+              <p className="text-gray-600 mb-1 text-sm">{dept.email}</p>
               <p className="text-gray-600 font-mono text-sm">{dept.phone}</p>
             </div>
           </FadeUpReveal>
@@ -1936,30 +1950,30 @@ const LiveSupport = () => (
   <section className="py-24 bg-[#E60000] text-white px-[3vw] text-center">
     <div className="max-w-[1200px] mx-auto flex flex-col items-center">
       <FadeUpReveal>
-        <Zap size={48} className="mb-8 mx-auto text-white/90" />
-        <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter mb-6 leading-tight">24/7 PARTNER SUPPORT.</h2>
-        <p className="text-xl text-white/90 leading-relaxed mb-10 max-w-2xl mx-auto">Existing B2B partners have round-the-clock access to our emergency logistics and technical support hotlines to ensure zero downtime in your retail operations.</p>
-        <button className="bg-white text-[#E60000] px-10 py-5 radius-max font-bold text-sm uppercase tracking-widest hover:bg-black hover:text-white transition-colors" data-cursor="hover">Access Live Portal Support</button>
+        <Zap size={40} className="mb-6 mx-auto text-white/90" />
+        <h2 className="text-3xl md:text-5xl font-heading font-black tracking-tighter mb-5 leading-tight">24/7 PARTNER SUPPORT.</h2>
+        <p className="text-lg text-white/90 leading-relaxed mb-8 max-w-2xl mx-auto">Existing B2B partners have round-the-clock access to our emergency logistics and technical support hotlines to ensure zero downtime in your retail operations.</p>
+        <button className="bg-white text-[#E60000] px-8 py-4 radius-max font-bold text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-colors" data-cursor="hover">Access Live Portal Support</button>
       </FadeUpReveal>
     </div>
   </section>
 );
 
 const FacilityTour = () => (
-  <section className="py-32 bg-[#111] text-white px-[3vw] text-left overflow-hidden relative">
-    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row items-center gap-16">
-       <div className="lg:w-1/2 w-full h-[400px] md:h-[600px] radius-max overflow-hidden relative" data-cursor="drag">
+  <section className="py-24 bg-[#111] text-white px-[3vw] text-left overflow-hidden relative">
+    <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row items-center gap-12">
+       <div className="lg:w-1/2 w-full h-[350px] md:h-[500px] radius-max overflow-hidden relative" data-cursor="drag">
          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=80" alt="Facility Tour" className="w-full h-full object-cover grayscale-[30%] hover:scale-105 transition-transform duration-1000" />
        </div>
        <div className="lg:w-1/2">
          <FadeUpReveal>
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-5">
                <div className="w-10 h-[2px] bg-[#E60000]" />
-               <span className="text-gray-400 font-medium tracking-widest uppercase text-sm">Experience Scale</span>
+               <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Experience Scale</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading font-black mb-8 leading-tight">BOOK A <span className="text-[#E60000]">FACILITY TOUR.</span></h2>
-            <p className="text-gray-300 text-lg leading-relaxed mb-8 max-w-xl">We invite our premier partners to walk the floor of our 150,000 sq ft climate-controlled Central Distribution Hub in Pune. Witness our automated fulfillment engine firsthand.</p>
-            <button className="border border-white/30 text-white px-8 py-4 radius-max text-sm font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center gap-3 w-max" data-cursor="hover">Schedule Visit <ArrowRight size={18} /></button>
+            <h2 className="text-3xl md:text-5xl font-heading font-black mb-6 leading-tight">BOOK A <span className="text-[#E60000]">FACILITY TOUR.</span></h2>
+            <p className="text-gray-300 text-base leading-relaxed mb-8 max-w-xl">We invite our premier partners to walk the floor of our 150,000 sq ft climate-controlled Central Distribution Hub in Pune. Witness our automated fulfillment engine firsthand.</p>
+            <button className="border border-white/30 text-white px-6 py-3 radius-max text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center gap-2 w-max" data-cursor="hover">Schedule Visit <ArrowRight size={16} /></button>
          </FadeUpReveal>
        </div>
     </div>
@@ -1967,21 +1981,21 @@ const FacilityTour = () => (
 );
 
 const WholesaleFastTrack = () => (
-  <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left bg-dots">
+  <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left bg-dots">
     <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
       <div className="md:w-1/2">
         <FadeUpReveal>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-6 leading-tight">ENTERPRISE <br/><span className="text-[#E60000]">FAST-TRACK.</span></h2>
-          <p className="text-gray-600 text-lg leading-relaxed mb-8 max-w-lg">For national retail chains, veterinary hospitals, and bulk distributors. Skip the standard onboarding queue and connect directly with our Enterprise Strategy Directors.</p>
+          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-5 leading-tight">ENTERPRISE <br/><span className="text-[#E60000]">FAST-TRACK.</span></h2>
+          <p className="text-gray-600 text-base leading-relaxed mb-6 max-w-lg">For national retail chains, veterinary hospitals, and bulk distributors. Skip the standard onboarding queue and connect directly with our Enterprise Strategy Directors.</p>
         </FadeUpReveal>
       </div>
       <div className="md:w-1/2 w-full">
         <FadeUpReveal delayOffset={100}>
-          <div className="bg-white p-10 md:p-14 radius-max shadow-2xl border border-gray-100 text-center flex flex-col items-center group cursor-pointer" data-cursor="hover">
-            <Award size={48} className="text-[#E60000] mb-6 group-hover:scale-110 transition-transform" />
-            <h3 className="text-3xl font-heading font-bold text-[#111] mb-4">Request VIP Onboarding</h3>
-            <p className="text-gray-500 mb-8 max-w-sm">Requires a minimum initial procurement value of ₹50,00,000 for eligibility.</p>
-            <button className="bg-[#111] text-white px-10 py-5 radius-max font-bold text-sm uppercase tracking-widest hover:bg-[#E60000] transition-colors w-full">Initiate Enterprise Request</button>
+          <div className="bg-white p-8 md:p-10 radius-max shadow-2xl border border-gray-100 text-center flex flex-col items-center group cursor-pointer" data-cursor="hover">
+            <Award size={40} className="text-[#E60000] mb-5 group-hover:scale-110 transition-transform" />
+            <h3 className="text-2xl font-heading font-bold text-[#111] mb-3">Request VIP Onboarding</h3>
+            <p className="text-gray-500 text-sm mb-6 max-w-sm">Requires a minimum initial procurement value of ₹50,00,000 for eligibility.</p>
+            <button className="bg-[#111] text-white px-8 py-4 radius-max font-bold text-xs uppercase tracking-widest hover:bg-[#E60000] transition-colors w-full">Initiate Enterprise Request</button>
           </div>
         </FadeUpReveal>
       </div>
@@ -1990,11 +2004,11 @@ const WholesaleFastTrack = () => (
 );
 
 const PartnerQuickLink = () => (
-  <section className="py-24 bg-white px-[3vw] text-center border-t border-gray-100">
+  <section className="py-20 bg-white px-[3vw] text-center border-t border-gray-100">
     <FadeUpReveal>
-      <h2 className="text-3xl md:text-4xl font-heading font-bold text-[#111] mb-6">Already part of the network?</h2>
-      <p className="text-gray-500 mb-8 max-w-xl mx-auto">Access real-time inventory, manage orders, and connect with your account manager through the digital hub.</p>
-      <button className="bg-transparent border-2 border-[#111] text-[#111] px-10 py-4 radius-max font-bold hover:bg-[#111] hover:text-white transition-colors uppercase tracking-widest text-sm" data-cursor="hover">Log In to B2B Portal</button>
+      <h2 className="text-2xl md:text-3xl font-heading font-bold text-[#111] mb-4">Already part of the network?</h2>
+      <p className="text-gray-500 text-sm mb-8 max-w-xl mx-auto">Access real-time inventory, manage orders, and connect with your account manager through the digital hub.</p>
+      <button className="bg-transparent border-2 border-[#111] text-[#111] px-8 py-3 radius-max font-bold hover:bg-[#111] hover:text-white transition-colors uppercase tracking-widest text-xs" data-cursor="hover">Log In to B2B Portal</button>
     </FadeUpReveal>
   </section>
 );
@@ -2008,32 +2022,32 @@ const BlogGrid = () => {
   ];
 
   return (
-    <section className="py-32 bg-white px-[3vw] text-left">
+    <section className="py-24 bg-white px-[3vw] text-left">
       <div className="max-w-[1800px] mx-auto">
         <FadeUpReveal>
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-5">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Articles & Guides</span>
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Articles & Guides</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">LATEST <span className="text-[#E60000]">POSTS.</span></h2>
+          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">LATEST <span className="text-[#E60000]">POSTS.</span></h2>
         </FadeUpReveal>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {blogs.map((blog, i) => (
             <FadeUpReveal key={i} delayOffset={i * 100}>
               <div className="group cursor-pointer text-left" data-cursor="hover">
-                <div className="w-full aspect-[16/9] radius-max overflow-hidden mb-6 relative">
+                <div className="w-full aspect-[16/9] radius-max overflow-hidden mb-5 relative">
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500 z-10" />
                   <img src={blog.img} alt={blog.title} className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" />
-                  <div className="absolute top-6 left-6 z-20 bg-white px-4 py-2 radius-max text-[10px] font-bold uppercase tracking-widest text-black">
+                  <div className="absolute top-5 left-5 z-20 bg-white px-3 py-1.5 radius-max text-[10px] font-bold uppercase tracking-widest text-black">
                     {blog.category}
                   </div>
                 </div>
-                <p className="text-gray-400 font-mono text-xs uppercase tracking-widest mb-3 flex items-center gap-2"><BookOpen size={14}/> {blog.readTime}</p>
-                <h4 className="text-3xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors duration-300 leading-tight mb-4">
+                <p className="text-gray-400 font-mono text-[10px] uppercase tracking-widest mb-2 flex items-center gap-2"><BookOpen size={12}/> {blog.readTime}</p>
+                <h4 className="text-2xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors duration-300 leading-tight mb-3">
                   {blog.title}
                 </h4>
-                <p className="text-gray-600 leading-relaxed max-w-lg mb-6">{blog.desc}</p>
-                <button className="flex items-center gap-2 text-sm font-bold text-[#111] group-hover:text-[#E60000] transition-colors">Read Article <ArrowRight size={16} /></button>
+                <p className="text-gray-600 text-sm leading-relaxed max-w-lg mb-5">{blog.desc}</p>
+                <button className="flex items-center gap-2 text-xs font-bold text-[#111] group-hover:text-[#E60000] transition-colors">Read Article <ArrowRight size={14} /></button>
               </div>
             </FadeUpReveal>
           ))}
@@ -2052,26 +2066,26 @@ const NewsInsightsGrid = () => {
   ];
 
   return (
-    <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+    <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left">
       <div className="max-w-[1800px] mx-auto">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Media Center</span>
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Media Center</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-16">COMPANY <span className="text-[#E60000]">UPDATES.</span></h2>
+          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">COMPANY <span className="text-[#E60000]">UPDATES.</span></h2>
         </FadeUpReveal>
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6">
           {news.map((item, i) => (
             <FadeUpReveal key={i} delayOffset={i * 100}>
-              <div className="bg-white border border-gray-200 radius-max p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start md:items-center hover:shadow-xl transition-all duration-300 group cursor-pointer" data-cursor="hover">
-                <div className="w-full md:w-[250px] aspect-[16/9] md:aspect-square radius-max overflow-hidden shrink-0 relative">
+              <div className="bg-white border border-gray-200 radius-max p-5 md:p-6 flex flex-col md:flex-row gap-6 items-start md:items-center hover:shadow-xl transition-all duration-300 group cursor-pointer" data-cursor="hover">
+                <div className="w-full md:w-[200px] aspect-[16/9] md:aspect-square radius-max overflow-hidden shrink-0 relative">
                   <img src={item.img} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="News" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-2"><Newspaper size={14}/> {item.type} &bull; <span className="text-gray-400">{item.date}</span></p>
-                  <h3 className="text-2xl md:text-4xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors mb-4">{item.title}</h3>
-                  <button className="flex items-center gap-2 text-sm font-bold text-gray-600 group-hover:text-[#111] transition-colors">Read Press Release <ArrowRight size={16} /></button>
+                  <p className="text-[#E60000] text-[10px] font-bold uppercase tracking-widest mb-2 flex items-center gap-2"><Newspaper size={12}/> {item.type} &bull; <span className="text-gray-400">{item.date}</span></p>
+                  <h3 className="text-xl md:text-3xl font-heading font-bold text-[#111] group-hover:text-[#E60000] transition-colors mb-3">{item.title}</h3>
+                  <button className="flex items-center gap-2 text-xs font-bold text-gray-600 group-hover:text-[#111] transition-colors">Read Press Release <ArrowRight size={14} /></button>
                 </div>
               </div>
             </FadeUpReveal>
@@ -2083,26 +2097,26 @@ const NewsInsightsGrid = () => {
 };
 
 const ExpandedMissionVision = () => (
-  <section className="py-32 bg-[#111] text-white px-[3vw] text-left border-b border-white/10">
+  <section className="py-24 bg-[#111] text-white px-[3vw] text-left border-b border-white/10">
     <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
       <div className="lg:w-1/2">
         <FadeUpReveal>
-          <h3 className="text-sm font-bold tracking-widest text-[#E60000] uppercase mb-6 flex items-center gap-4"><div className="w-8 h-[2px] bg-[#E60000]"></div>Purpose-Driven</h3>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-white mb-6 leading-tight">MORE THAN JUST <br/>A BUSINESS.</h2>
-          <p className="text-gray-300 text-xl leading-relaxed mb-8">At ABK Imports, our core mission transcends supply chain metrics. We exist to elevate the fundamental standard of animal welfare. By bridging the gap between global nutritional science and local accessibility, we ensure every pet has the opportunity to thrive.</p>
-          <div className="grid grid-cols-2 gap-6 mt-12 border-t border-white/10 pt-12">
+          <h3 className="text-xs font-bold tracking-widest text-[#E60000] uppercase mb-5 flex items-center gap-3"><div className="w-6 h-[2px] bg-[#E60000]"></div>Purpose-Driven</h3>
+          <h2 className="text-3xl md:text-5xl font-heading font-black text-white mb-5 leading-tight">MORE THAN JUST <br/>A BUSINESS.</h2>
+          <p className="text-gray-300 text-lg leading-relaxed mb-8">At ABK Imports, our core mission transcends supply chain metrics. We exist to elevate the fundamental standard of animal welfare. By bridging the gap between global nutritional science and local accessibility, we ensure every pet has the opportunity to thrive.</p>
+          <div className="grid grid-cols-2 gap-6 mt-10 border-t border-white/10 pt-10">
             <div>
-              <h4 className="text-3xl font-heading font-bold text-[#E60000] mb-2">Integrity</h4>
+              <h4 className="text-2xl font-heading font-bold text-[#E60000] mb-2">Integrity</h4>
               <p className="text-gray-400 text-sm leading-relaxed">Uncompromising ethics in sourcing, testing, and distribution.</p>
             </div>
             <div>
-              <h4 className="text-3xl font-heading font-bold text-[#E60000] mb-2">Empathy</h4>
+              <h4 className="text-2xl font-heading font-bold text-[#E60000] mb-2">Empathy</h4>
               <p className="text-gray-400 text-sm leading-relaxed">Every operational decision is driven by a deep love for animals.</p>
             </div>
           </div>
         </FadeUpReveal>
       </div>
-      <div className="lg:w-1/2 h-[500px] lg:h-[700px] w-full relative radius-max overflow-hidden" data-cursor="hover">
+      <div className="lg:w-1/2 h-[400px] lg:h-[600px] w-full relative radius-max overflow-hidden" data-cursor="hover">
         <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80" alt="Dog" className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-[1.5s] grayscale-[20%]" />
       </div>
     </div>
@@ -2117,32 +2131,32 @@ const CSRExperiences = () => {
   ];
 
   return (
-    <section className="py-32 bg-[#FAFAFA] px-[3vw] text-left">
+    <section className="py-24 bg-[#FAFAFA] px-[3vw] text-left">
       <div className="max-w-[1800px] mx-auto">
         <FadeUpReveal>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-[2px] bg-[#E60000]" />
-            <span className="text-gray-500 font-medium tracking-widest uppercase text-sm">Voices from the Ground</span>
+            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Voices from the Ground</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-[#111] mb-20 max-w-4xl leading-tight">REAL IMPACT.<br/><span className="text-[#E60000]">REAL STORIES.</span></h2>
+          <h2 className="text-2xl md:text-4xl font-heading font-black text-[#111] mb-16 max-w-4xl leading-tight">REAL IMPACT.<br/><span className="text-[#E60000]">REAL STORIES.</span></h2>
         </FadeUpReveal>
         
-        <div className="flex flex-col gap-24">
+        <div className="flex flex-col gap-20">
           {experiences.map((exp, i) => (
-            <FadeUpReveal key={i} delayOffset={100} className={`flex flex-col ${i % 2 !== 0 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 lg:gap-20 items-center`}>
+            <FadeUpReveal key={i} delayOffset={100} className={`flex flex-col ${i % 2 !== 0 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 lg:gap-16 items-center`}>
               <div className="w-full lg:w-1/2 aspect-[4/3] radius-max overflow-hidden shadow-2xl relative group" data-cursor="hover">
                  <img src={exp.img} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 grayscale-[10%]" alt="Experience" />
                  <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors" />
-                 <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-sm p-3 radius-max text-[#E60000]">
-                    <Heart size={24} fill="currentColor" />
+                 <div className="absolute top-5 right-5 bg-white/90 backdrop-blur-sm p-2.5 radius-max text-[#E60000]">
+                    <Heart size={20} fill="currentColor" />
                  </div>
               </div>
               <div className="w-full lg:w-1/2 flex flex-col justify-center">
-                 <h3 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-6 leading-tight">{exp.title}</h3>
-                 <p className="text-gray-600 text-lg leading-relaxed mb-8 italic border-l-4 border-gray-200 pl-6 py-2">"{exp.text}"</p>
+                 <h3 className="text-2xl md:text-4xl font-heading font-black text-[#111] mb-5 leading-tight">{exp.title}</h3>
+                 <p className="text-gray-600 text-base leading-relaxed mb-6 italic border-l-4 border-gray-200 pl-5 py-1">"{exp.text}"</p>
                  <div>
-                   <p className="font-bold text-[#111] text-lg">{exp.author}</p>
-                   <p className="text-[#E60000] text-sm font-bold uppercase tracking-widest mt-1 flex items-center gap-2"><MapPin size={14}/> {exp.location}</p>
+                   <p className="font-bold text-[#111] text-base">{exp.author}</p>
+                   <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mt-1 flex items-center gap-2"><MapPin size={12}/> {exp.location}</p>
                  </div>
               </div>
             </FadeUpReveal>
@@ -2181,21 +2195,21 @@ const BrandPage = ({ brandId }) => {
       <section className="py-24 px-[3vw] bg-white">
          <div className="max-w-[1800px] mx-auto">
             <div className="max-w-3xl mb-16 text-left">
-               <h2 className="text-3xl md:text-5xl font-heading font-black mb-6">About {brand.title.replace('.', '')}</h2>
-               <p className="text-lg text-gray-600 leading-relaxed">{brand.description}</p>
+               <h2 className="text-2xl md:text-4xl font-heading font-black mb-5">About {brand.title.replace('.', '')}</h2>
+               <p className="text-base text-gray-600 leading-relaxed">{brand.description}</p>
             </div>
             
             {brand.products && brand.products.length > 0 && (
               <div>
-                <h3 className="text-2xl font-heading font-bold mb-8 text-left">Featured Categories & Products</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <h3 className="text-xl font-heading font-bold mb-6 text-left">Featured Categories & Products</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                    {brand.products.map((product, idx) => (
-                     <div key={idx} className="bg-[#FAFAFA] border border-gray-100 radius-max p-6 text-left group">
-                        <div className="w-full aspect-square overflow-hidden radius-max mb-6">
+                     <div key={idx} className="bg-[#FAFAFA] border border-gray-100 radius-max p-5 text-left group">
+                        <div className="w-full aspect-square overflow-hidden radius-max mb-5">
                           <img src={product.img} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         </div>
-                        <p className="text-[#E60000] text-xs font-bold uppercase tracking-widest mb-2">{product.category}</p>
-                        <h4 className="text-xl font-heading font-bold text-[#111] mb-2">{product.name}</h4>
+                        <p className="text-[#E60000] text-[10px] font-bold uppercase tracking-widest mb-1">{product.category}</p>
+                        <h4 className="text-lg font-heading font-bold text-[#111] mb-2">{product.name}</h4>
                         <p className="text-gray-500 text-sm leading-relaxed">{product.desc}</p>
                      </div>
                    ))}
@@ -2332,45 +2346,45 @@ const ContactPage = () => (
       subtitle="Whether for distribution inquiries, partnership onboarding, or general support, our regional teams are ready."
       bgImage="https://images.unsplash.com/photo-1534536281715-e28d76689b4d?auto=format&fit=crop&w=1920&q=80"
     />
-    <div className="bg-white py-32 px-[3vw] text-left">
+    <div className="bg-white py-24 px-[3vw] text-left">
       <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16">
          <div className="lg:w-1/3">
-            <h2 className="text-4xl font-heading font-black mb-6 text-[#111]">CONNECT.</h2>
-            <p className="text-gray-600 mb-12 leading-relaxed text-lg">Reach out to our global headquarters in Pune or connect directly with our regional B2B support desks.</p>
-            <div className="flex flex-col gap-8">
+            <h2 className="text-3xl font-heading font-black mb-5 text-[#111]">CONNECT.</h2>
+            <p className="text-gray-600 mb-10 leading-relaxed text-base">Reach out to our global headquarters in Pune or connect directly with our regional B2B support desks.</p>
+            <div className="flex flex-col gap-6">
               <div>
                  <h3 className="font-heading font-bold mb-2 text-[#111]">Pune Headquarters</h3>
-                 <p className="text-gray-500 mb-2">Gera Imperium Alpha, Kharadi,<br/>Pune, Maharashtra 411014</p>
-                 <a href="mailto:hq@abkimports.com" className="font-bold text-[#E60000] hover:underline" data-cursor="hover">hq@abkimports.com</a>
+                 <p className="text-gray-500 mb-2 text-sm">Gera Imperium Alpha, Kharadi,<br/>Pune, Maharashtra 411014</p>
+                 <a href="mailto:hq@abkimports.com" className="font-bold text-[#E60000] hover:underline text-sm" data-cursor="hover">hq@abkimports.com</a>
               </div>
               <div>
                  <h3 className="font-heading font-bold mb-2 text-[#111]">B2B Support</h3>
-                 <p className="text-gray-500 mb-2">Dedicated account management for existing retail partners.</p>
-                 <a href="mailto:partners@abkimports.com" className="font-bold text-[#E60000] hover:underline" data-cursor="hover">partners@abkimports.com</a>
+                 <p className="text-gray-500 mb-2 text-sm">Dedicated account management for existing retail partners.</p>
+                 <a href="mailto:partners@abkimports.com" className="font-bold text-[#E60000] hover:underline text-sm" data-cursor="hover">partners@abkimports.com</a>
               </div>
             </div>
          </div>
-         <div className="lg:w-2/3 bg-[#F9F9F9] radius-max p-10 md:p-16 border border-gray-100">
-            <form className="flex flex-col gap-8">
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="flex flex-col gap-3">
-                     <label className="text-xs font-bold uppercase tracking-widest text-gray-500">First Name</label>
-                     <input type="text" className="bg-white border border-gray-200 radius-max px-5 py-4 focus:outline-none focus:border-[#E60000] transition-colors" />
+         <div className="lg:w-2/3 bg-[#F9F9F9] radius-max p-8 md:p-12 border border-gray-100">
+            <form className="flex flex-col gap-6">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex flex-col gap-2">
+                     <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">First Name</label>
+                     <input type="text" className="bg-white border border-gray-200 radius-max px-4 py-3 text-sm focus:outline-none focus:border-[#E60000] transition-colors" />
                   </div>
-                  <div className="flex flex-col gap-3">
-                     <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Last Name</label>
-                     <input type="text" className="bg-white border border-gray-200 radius-max px-5 py-4 focus:outline-none focus:border-[#E60000] transition-colors" />
+                  <div className="flex flex-col gap-2">
+                     <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Last Name</label>
+                     <input type="text" className="bg-white border border-gray-200 radius-max px-4 py-3 text-sm focus:outline-none focus:border-[#E60000] transition-colors" />
                   </div>
                </div>
-               <div className="flex flex-col gap-3">
-                  <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Email Address</label>
-                  <input type="email" className="bg-white border border-gray-200 radius-max px-5 py-4 focus:outline-none focus:border-[#E60000] transition-colors" />
+               <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Email Address</label>
+                  <input type="email" className="bg-white border border-gray-200 radius-max px-4 py-3 text-sm focus:outline-none focus:border-[#E60000] transition-colors" />
                </div>
-               <div className="flex flex-col gap-3">
-                  <label className="text-xs font-bold uppercase tracking-widest text-gray-500">Message</label>
-                  <textarea rows="6" className="bg-white border border-gray-200 radius-max px-5 py-4 focus:outline-none focus:border-[#E60000] transition-colors resize-none" />
+               <div className="flex flex-col gap-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Message</label>
+                  <textarea rows="5" className="bg-white border border-gray-200 radius-max px-4 py-3 text-sm focus:outline-none focus:border-[#E60000] transition-colors resize-none" />
                </div>
-               <button className="bg-[#111] text-white px-10 py-5 radius-max font-bold text-sm uppercase tracking-widest hover:bg-[#E60000] transition-colors w-max mt-4" data-cursor="hover">Send Message</button>
+               <button className="bg-[#111] text-white px-8 py-4 radius-max font-bold text-xs uppercase tracking-widest hover:bg-[#E60000] transition-colors w-max mt-2" data-cursor="hover">Send Message</button>
             </form>
          </div>
       </div>
@@ -2387,14 +2401,14 @@ const ContactPage = () => (
 );
 
 const PreFooter = () => (
-  <section className="py-32 bg-[#E60000] text-white text-left px-[3vw]">
-    <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+  <section className="py-24 bg-[#E60000] text-white text-left px-[3vw]">
+    <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
       <FadeUpReveal className="flex-1">
-        <h2 className="text-5xl md:text-7xl font-heading font-extrabold tracking-tighter mb-6 leading-tight">READY TO <br/>ELEVATE?</h2>
-        <p className="text-xl max-w-xl text-white/90">Join India's premier import and distribution partner network today.</p>
+        <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter mb-4 leading-tight">READY TO <br/>ELEVATE?</h2>
+        <p className="text-lg max-w-xl text-white/90">Join India's premier import and distribution partner network today.</p>
       </FadeUpReveal>
       <FadeUpReveal delayOffset={100}>
-        <button className="bg-white text-[#E60000] px-12 py-6 radius-max font-bold text-lg hover:bg-black hover:text-white transition-colors duration-300 w-max" data-cursor="hover">
+        <button className="bg-white text-[#E60000] px-10 py-5 radius-max font-bold text-base hover:bg-black hover:text-white transition-colors duration-300 w-max" data-cursor="hover">
           Contact Us Today
         </button>
       </FadeUpReveal>
@@ -2404,30 +2418,30 @@ const PreFooter = () => (
 
 const Footer = ({ navigateTo }) => {
   return (
-    <footer id="contact" className="bg-[#050505] text-white pt-24 pb-8 overflow-hidden text-left">
-      <div className="px-[3vw] flex flex-col lg:flex-row justify-between gap-16 lg:gap-24 mb-24 max-w-[1800px] mx-auto">
-        <div className="max-w-[400px]">
-          <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="ABK Imports Logo" className="h-[73px] md:h-[83px] mb-8 object-contain origin-left brightness-0 invert" />
-          <p className="text-gray-400 font-light leading-relaxed mb-10 text-[15px]">India's premier import and distribution partner for global pet care brands. Elevating industry standards through superior supply chain management.</p>
-          <div className="flex gap-4">
+    <footer id="contact" className="bg-[#050505] text-white pt-20 pb-6 overflow-hidden text-left">
+      <div className="px-[3vw] flex flex-col lg:flex-row justify-between gap-12 lg:gap-20 mb-20 max-w-[1800px] mx-auto">
+        <div className="max-w-[350px]">
+          <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="ABK Imports Logo" className="h-[60px] md:h-[70px] mb-6 object-contain origin-left brightness-0 invert" />
+          <p className="text-gray-400 font-light leading-relaxed mb-8 text-sm">India's premier import and distribution partner for global pet care brands. Elevating industry standards through superior supply chain management.</p>
+          <div className="flex gap-3">
             {['LINKEDIN', 'FACEBOOK', 'INSTAGRAM'].map((social) => (
-              <a key={social} href="#" className="text-[11px] font-medium hover:text-white transition-colors border border-white/20 px-5 py-2.5 rounded-full uppercase tracking-widest text-gray-400 hover:border-white" data-cursor="hover">{social}</a>
+              <a key={social} href="#" className="text-[10px] font-medium hover:text-white transition-colors border border-white/20 px-4 py-2 rounded-full uppercase tracking-widest text-gray-400 hover:border-white" data-cursor="hover">{social}</a>
             ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 flex-1 lg:ml-20 mt-4 md:mt-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-12 flex-1 lg:ml-16 mt-4 md:mt-0">
           <div>
-            <h4 className="font-heading font-semibold mb-6 uppercase tracking-widest text-[11px] text-gray-500">DISTRIBUTION</h4>
-            <ul className="space-y-4 text-gray-400 font-light text-[15px]">
+            <h4 className="font-heading font-semibold mb-5 uppercase tracking-widest text-[10px] text-gray-500">DISTRIBUTION</h4>
+            <ul className="space-y-3 text-gray-400 font-light text-sm">
               <li><button onClick={() => navigateTo('Work With Us')} className="hover:text-white transition-colors text-left" data-cursor="hover">Partner With Us</button></li>
               <li><button onClick={() => navigateTo('Brand Portfolio')} className="hover:text-white transition-colors text-left" data-cursor="hover">Brand Portfolio</button></li>
               <li><button className="hover:text-white transition-colors text-left" data-cursor="hover">B2B Portal Login</button></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-heading font-semibold mb-6 uppercase tracking-widest text-[11px] text-gray-500">COMPANY</h4>
-            <ul className="space-y-4 text-gray-400 font-light text-[15px]">
+            <h4 className="font-heading font-semibold mb-5 uppercase tracking-widest text-[10px] text-gray-500">COMPANY</h4>
+            <ul className="space-y-3 text-gray-400 font-light text-sm">
               <li><button onClick={() => navigateTo('About Us')} className="hover:text-white transition-colors text-left" data-cursor="hover">About ABK</button></li>
               <li><button onClick={() => navigateTo('Work With Us')} className="hover:text-white transition-colors text-left" data-cursor="hover">Careers</button></li>
               <li><button onClick={() => navigateTo('Contact')} className="hover:text-white transition-colors text-left" data-cursor="hover">Contact</button></li>
@@ -2435,8 +2449,8 @@ const Footer = ({ navigateTo }) => {
             </ul>
           </div>
           <div className="col-span-1 md:col-span-1 lg:pl-4">
-              <h4 className="font-heading font-semibold mb-6 uppercase tracking-widest text-[11px] text-gray-500">RESOURCES</h4>
-              <ul className="space-y-4 text-gray-400 font-light text-[15px]">
+              <h4 className="font-heading font-semibold mb-5 uppercase tracking-widest text-[10px] text-gray-500">RESOURCES</h4>
+              <ul className="space-y-3 text-gray-400 font-light text-sm">
                 <li><button onClick={() => navigateTo('Blogs')} className="hover:text-white transition-colors text-left" data-cursor="hover">Blogs & Guides</button></li>
                 <li><button onClick={() => navigateTo('News & Insights')} className="hover:text-white transition-colors text-left" data-cursor="hover">Newsroom</button></li>
                 <li><button onClick={() => navigateTo('Brand Portfolio')} className="hover:text-white transition-colors text-left" data-cursor="hover">Case Studies</button></li>
@@ -2445,17 +2459,17 @@ const Footer = ({ navigateTo }) => {
         </div>
       </div>
 
-      <div className="w-full border-t border-white/5 pt-16 pb-8 overflow-hidden relative mt-16">
+      <div className="w-full border-t border-white/5 pt-12 pb-6 overflow-hidden relative mt-12">
         <div className="flex w-max animate-footer-marquee whitespace-nowrap">
            {[...Array(8)].map((_, i) => (
-              <h1 key={i} className="text-[14vw] font-heading font-extrabold leading-none tracking-tighter text-[#141414] whitespace-nowrap pr-8 select-none">ABK IMPORTS</h1>
+              <h1 key={i} className="text-[12vw] font-heading font-extrabold leading-none tracking-tighter text-[#141414] whitespace-nowrap pr-8 select-none">ABK IMPORTS</h1>
            ))}
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-center text-[10px] font-medium tracking-widest text-gray-600 uppercase gap-6 mt-8 px-[3vw] max-w-[1800px] mx-auto">
+      <div className="flex flex-col md:flex-row justify-between items-center text-[9px] font-medium tracking-widest text-gray-600 uppercase gap-5 mt-6 px-[3vw] max-w-[1800px] mx-auto">
         <p>© 2026 ABK IMPORTS. ALL RIGHTS RESERVED.</p>
-        <div className="flex gap-8">
+        <div className="flex gap-6">
             <a href="#" className="hover:text-gray-300 transition-colors" data-cursor="hover">PRIVACY POLICY</a>
             <a href="#" className="hover:text-gray-300 transition-colors" data-cursor="hover">TERMS OF SERVICE</a>
         </div>
@@ -2590,10 +2604,10 @@ export default function App() {
       <div className="hidden md:block"><div ref={cursorDotRef} className="cursor-dot">{cursorText}</div></div>
       {loading && <Preloader onComplete={() => setLoading(false)} />}
       
-      <FullScreenMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} navigateTo={handleNavigate} />
+      <FullScreenMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)} setCurrentPage={handleNavigate} />
 
       <div className={`transition-opacity duration-1000 ease-in-out ${loading ? 'opacity-0 h-screen overflow-hidden' : 'opacity-100'}`}>
-        <Header onOpenMenu={() => setMenuOpen(true)} scrolled={scrolled} navigateTo={handleNavigate} currentPage={currentPage} />
+        <Header onOpenMenu={() => setMenuOpen(true)} setCurrentPage={handleNavigate} currentPage={currentPage} />
         <main>
           {renderPage()}
         </main>
