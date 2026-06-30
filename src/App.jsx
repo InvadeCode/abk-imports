@@ -281,15 +281,15 @@ const FullScreenMenu = ({ isOpen, onClose, setCurrentPage }) => {
       </div>
 
       <div className="flex-1 flex flex-col md:flex-row px-[4vw] py-12 md:py-20 h-full overflow-y-auto">
-        <div className="flex-[1.35] flex flex-col justify-center gap-3 md:gap-4">
+        <div className="flex-[1.35] flex flex-col justify-center gap-1 md:gap-2">
           {links.map((link, i) => (
-            <div key={link.id} className="overflow-hidden py-3">
+            <div key={link.id} className="overflow-hidden py-3 px-1 -mx-1">
               <button
                 onClick={() => handleNav(link.id)}
-                className={`block text-left whitespace-nowrap text-[1.6rem] md:text-[2.55rem] lg:text-[3.2rem] leading-[1.18] font-heading font-black hover:text-[#E60000] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                className={`block text-left whitespace-nowrap pb-3 pt-1 text-5xl lg:text-6xl leading-[1.25] font-heading font-black hover:text-[#E60000] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   isOpen
                     ? 'translate-y-0 opacity-100'
-                    : 'translate-y-full opacity-0'
+                    : 'translate-y-[120%] opacity-0'
                 }`}
                 style={{
                   transitionDelay: `${isOpen ? 200 + i * 100 : 0}ms`,
@@ -608,7 +608,7 @@ const WhoAreWe = ({ navigateTo }) => (
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Who Are We</span>
           </div>
-          <h2 className="text-3xl md:text-5xl lg:text-[3.5vw] font-heading font-black text-[#111] mb-6 leading-tight tracking-tighter">
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">
             GLOBAL BRANDS.<br/>
             <span className="text-[#E60000]">INDIAN UNDERSTANDING.</span><br/>
             COMPLETE PET CARE.
@@ -645,7 +645,7 @@ const TailoredSolutions = ({ navigateTo }) => {
       <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
          <div className="w-full lg:w-1/2 order-2 lg:order-1 flex flex-col justify-center text-left">
             <FadeUpReveal>
-               <h2 className="text-4xl md:text-5xl lg:text-[4.5vw] font-heading font-black text-[#111] leading-[1.05] tracking-tighter mb-12">
+               <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] leading-tight mb-12">
                  Tailored <span className="text-[#E60000]">Pet Care</span><br/>Solutions
                </h2>
             </FadeUpReveal>
@@ -761,7 +761,7 @@ const AboutUs = () => {
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Timeline</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111] mb-16 max-w-3xl relative">
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-16 max-w-3xl relative leading-tight">
             A LEGACY BUILT ON THE <span className="text-[#E60000]">SPIRIT</span> OF CARE.
             <Star className="absolute -top-12 -left-12 text-[#E60000]/10 animate-spin-slow w-32 h-32 hidden md:block" />
           </h2>
@@ -830,7 +830,7 @@ const InteractiveCategoryExplorer = () => {
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Product Verticals</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111] mb-12">EXPLORE CATEGORIES.</h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">EXPLORE CATEGORIES.</h2>
         </FadeUpReveal>
 
         <div className="flex flex-col md:flex-row h-[600px] md:h-[450px] gap-4 w-full">
@@ -862,7 +862,7 @@ const ProductCatalogue = () => {
        <div className="max-w-[1800px] mx-auto px-[3vw] py-24 md:py-32 flex flex-col md:flex-row items-center justify-between gap-12">
           <div className="w-full md:w-1/2 relative z-10 text-white">
              <img src="https://abkimports.com/wp-content/uploads/2023/04/ABK-Logo_150pix-x-150pix-01.png" alt="ABK Imports" className="h-[80px] mb-8 brightness-0 invert object-contain" />
-             <h2 className="text-4xl md:text-[4.5vw] font-heading font-black leading-[0.9] tracking-tighter mb-4 uppercase">
+             <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter leading-tight mb-4 uppercase">
                 PRODUCT <br/> CATALOGUE
              </h2>
              <p className="text-2xl font-heading font-bold tracking-widest mb-12">2026-27</p>
@@ -899,7 +899,7 @@ const WhyChooseABK = () => {
                <div className="w-10 h-[2px] bg-[#E60000]" />
                <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Capabilities</span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-extrabold tracking-tighter mb-6 leading-[1]">WHY CHOOSE <span className="text-[#E60000]">ABK IMPORTS.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">WHY CHOOSE <span className="text-[#E60000]">ABK IMPORTS.</span></h2>
             <p className="text-gray-600 text-lg leading-relaxed max-w-3xl">We provide more than just products. We provide a robust, tech-enabled infrastructure designed to scale your retail or clinical operations.</p>
          </FadeUpReveal>
       </div>
@@ -932,7 +932,7 @@ const ABKTechAdvantage = () => (
                <div className="w-10 h-[2px] bg-[#E60000]" />
                <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Tech Infrastructure</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-8 leading-tight">DATA-DRIVEN <br/><span className="text-[#E60000]">DISTRIBUTION.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-8 leading-tight">DATA-DRIVEN <br/><span className="text-[#E60000]">DISTRIBUTION.</span></h2>
             <p className="text-gray-600 text-base leading-relaxed mb-8">Our proprietary B2B portal goes beyond ordering. We provide our partners with actionable retail analytics, API-driven inventory syncing, and automated restocking triggers.</p>
             <ul className="flex flex-col gap-4">
               {['Real-time inventory mapping via custom dashboard', 'Automated purchase order generation', 'Predictive demand analytics tailored to your region'].map((item, i) => (
@@ -958,7 +958,7 @@ const AccountManagement = () => (
            <div className="w-10 h-[2px] bg-[#E60000]" />
            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Partner Success</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">DEDICATED <span className="text-[#E60000]">SUPPORT.</span></h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">DEDICATED <span className="text-[#E60000]">SUPPORT.</span></h2>
       </FadeUpReveal>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
@@ -984,7 +984,7 @@ const QualityAssurance = () => (
     <div className="max-w-[1800px] mx-auto text-center flex flex-col items-center">
       <FadeUpReveal>
          <ShieldCheck size={64} className="mb-8 mx-auto text-white/90" />
-         <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter mb-6 leading-[1]">100% UNCOMPROMISED<br/>QUALITY CONTROL.</h2>
+         <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-6 leading-tight">100% UNCOMPROMISED<br/>QUALITY CONTROL.</h2>
          <p className="text-lg text-white/90 max-w-3xl mx-auto leading-relaxed mb-10">From the manufacturer's facility to your storefront, we maintain an unbroken chain of custody. Every batch is tracked, every import is legally certified, and cold-chain integrity is strictly enforced.</p>
          <div className="flex flex-wrap justify-center gap-4">
             <span className="bg-white text-[#E60000] px-6 py-2 radius-max font-bold text-xs uppercase tracking-widest hover:scale-105 transition-transform" data-cursor="hover">FSSAI Certified</span>
@@ -1011,7 +1011,7 @@ const OnboardingSteps = () => {
                <div className="w-10 h-[2px] bg-[#E60000]" />
                <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Getting Started</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">SEAMLESS <span className="text-[#E60000]">ONBOARDING.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">SEAMLESS <span className="text-[#E60000]">ONBOARDING.</span></h2>
          </FadeUpReveal>
          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
            {steps.map((step, i) => (
@@ -1043,7 +1043,7 @@ const MarketingSupport = () => (
                <div className="w-10 h-[2px] bg-[#E60000]" />
                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Growth Engine</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black mb-6 leading-tight">DRIVING <span className="text-[#E60000]">SELL-THROUGH.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-6 leading-tight">DRIVING <span className="text-[#E60000]">SELL-THROUGH.</span></h2>
             <p className="text-gray-300 text-base leading-relaxed mb-10">We don't just put products on your shelves; we help you move them. Our retail partners gain exclusive access to a massive repository of marketing collateral and strategic support.</p>
             <div className="grid grid-cols-2 gap-8">
                {[
@@ -1073,7 +1073,7 @@ const RetailerResources = () => (
                <div className="w-10 h-[2px] bg-[#E60000]" />
                <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">ABK Academy</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-6 leading-tight">EMPOWERING <br/><span className="text-[#E60000]">YOUR STAFF.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">EMPOWERING <br/><span className="text-[#E60000]">YOUR STAFF.</span></h2>
             <p className="text-gray-600 text-base leading-relaxed mb-10">Knowledge drives sales. We provide comprehensive, ongoing training for your staff to ensure they confidently recommend the right products to pet parents.</p>
             <div className="space-y-8">
                <div className="flex items-start gap-5 group cursor-default" data-cursor="hover">
@@ -1118,7 +1118,7 @@ const InteractiveROICalculator = () => {
               <div className="w-10 h-[2px] bg-[#E60000]" />
               <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Partner Benefits</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter mb-6">PROJECT YOUR <br/><span className="text-[#E60000]">GROWTH.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-6 leading-tight">PROJECT YOUR <br/><span className="text-[#E60000]">GROWTH.</span></h2>
             <p className="text-gray-400 text-base mb-10 leading-relaxed">Calculate your estimated monthly revenue potential by integrating ABK Imports' premium catalog into your retail or clinical practice.</p>
             
             <div className="bg-[#111] p-8 radius-max border border-white/10">
@@ -1173,7 +1173,7 @@ const InteractiveLogistics = () => {
              <div className="w-10 h-[2px] bg-[#E60000]" />
              <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Operations</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111] mb-6">UNMATCHED INFRASTRUCTURE.</h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">UNMATCHED INFRASTRUCTURE.</h2>
           <p className="text-gray-600 text-base max-w-2xl">Real-time inventory visibility and climate-controlled routing ensure your products arrive in pristine condition.</p>
         </FadeUpReveal>
       </div>
@@ -1261,7 +1261,7 @@ const GlobalNetwork = () => {
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Global Footprint</span>
           </div>
-          <h2 className="text-3xl md:text-5xl lg:text-[4vw] font-heading font-extrabold tracking-tighter mb-10 leading-[1]">
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-10 leading-tight">
             SOURCING WORLDWIDE.<br/>DELIVERING <span className="text-[#E60000]">PAN-INDIA.</span>
           </h2>
         </FadeUpReveal>
@@ -1358,7 +1358,7 @@ const FAQSection = () => {
                <div className="w-10 h-[2px] bg-[#E60000]" />
                <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Help & Support</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111]">FREQUENTLY ASKED.</h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] leading-tight">FREQUENTLY ASKED.</h2>
           </div>
         </FadeUpReveal>
 
@@ -1403,7 +1403,7 @@ const InsightsNews = () => {
               <div className="w-10 h-[2px] bg-[#E60000]" />
               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Corporate News</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-extrabold tracking-tighter text-[#111]">INDUSTRY INSIGHTS.</h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] leading-tight">INDUSTRY INSIGHTS.</h2>
           </FadeUpReveal>
           <FadeUpReveal delayOffset={100}>
              <button className="border border-gray-300 text-black px-6 py-3 radius-max text-sm font-semibold hover:border-[#111] hover:bg-[#111] hover:text-white transition-all duration-300 w-max" data-cursor="hover">
@@ -1441,7 +1441,7 @@ const WorkWithUs = () => {
     <section id="work-with-us" className="py-24 px-[3vw] blended-bg border-y border-gray-200 text-left">
       <div className="max-w-[1800px] mx-auto bg-white radius-max shadow-xl overflow-hidden flex flex-col md:flex-row">
          <div className="w-full md:w-1/2 p-10 md:p-20 flex flex-col justify-center">
-            <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6">PARTNER WITH EXCELLENCE.</h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">PARTNER WITH EXCELLENCE.</h2>
             <p className="text-gray-600 text-base mb-8 leading-relaxed">Whether you are a global brand looking to enter the Indian market, or a passionate professional seeking a career at our Savannah HQ, we want to hear from you.</p>
             <div className="flex flex-col sm:flex-row gap-4">
               <button className="bg-[#E60000] text-white px-6 py-3 radius-max font-bold hover:bg-[#111] transition-colors w-max text-sm" data-cursor="hover">Join Our Network</button>
@@ -1465,7 +1465,7 @@ const BrandSpotlight = ({ navigateTo }) => (
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Brand Spotlight</span>
           </div>
-          <h2 className="text-4xl md:text-6xl font-heading font-black mb-6 leading-[1]">ANDIS<br/><span className="text-gray-500">PRO.</span></h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-6 leading-tight">ANDIS<br/><span className="text-gray-500">PRO.</span></h2>
           <p className="text-lg text-gray-300 leading-relaxed mb-8 max-w-xl">As the exclusive national distributor for Andis, we empower Indian grooming professionals with world-class clipping and trimming technology built for precision.</p>
           <div className="flex gap-12 mb-8">
             <div>
@@ -1502,7 +1502,7 @@ const NewArrivals = () => {
               <div className="w-10 h-[2px] bg-[#E60000]" />
               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Just Landed</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">NEW ARRIVALS.</h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">NEW ARRIVALS.</h2>
           </FadeUpReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {arrivals.map((brand, i) => (
@@ -1538,7 +1538,7 @@ const SelectionCriteria = () => {
               <div className="w-10 h-[2px] bg-[#E60000]" />
               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Curation Process</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-16 max-w-4xl">HOW WE SELECT <span className="text-[#E60000]">OUR PARTNERS.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-16 max-w-4xl leading-tight">HOW WE SELECT <span className="text-[#E60000]">OUR PARTNERS.</span></h2>
           </FadeUpReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16">
              {criteria.map((item, i) => (
@@ -1561,12 +1561,12 @@ const OurMissionVision = () => (
     <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row gap-16 lg:gap-24">
       <FadeUpReveal className="flex-1">
         <h3 className="text-xs font-bold tracking-widest text-[#E60000] uppercase mb-6 flex items-center gap-4"><div className="w-8 h-[2px] bg-[#E60000]"></div>Our Mission</h3>
-        <h2 className="text-3xl md:text-4xl font-heading font-black text-[#111] mb-6 leading-tight">Setting a New Standard for Pet Wellbeing.</h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">Setting a New Standard for Pet Wellbeing.</h2>
         <p className="text-gray-600 text-base leading-relaxed mb-8">We are dedicated to enriching the lives of pets by providing Indian pet parents and professionals with uninterrupted access to the world's most trusted, clinically proven, and innovative pet care products.</p>
       </FadeUpReveal>
       <FadeUpReveal className="flex-1" delayOffset={200}>
         <h3 className="text-xs font-bold tracking-widest text-[#E60000] uppercase mb-6 flex items-center gap-4"><div className="w-8 h-[2px] bg-[#E60000]"></div>Our Vision</h3>
-        <h2 className="text-3xl md:text-4xl font-heading font-black text-[#111] mb-6 leading-tight">An Ecosystem of Global Excellence.</h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">An Ecosystem of Global Excellence.</h2>
         <p className="text-gray-600 text-base leading-relaxed">By 2030, we aim to be the backbone of the Asian pet care industry, integrating tech-driven logistics with uncompromising quality assurance to empower every clinic, salon, and retail partner nationwide.</p>
       </FadeUpReveal>
     </div>
@@ -1587,7 +1587,7 @@ const LeadershipTeam = () => {
              <div className="w-10 h-[2px] bg-[#E60000]" />
              <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">The Minds Behind ABK</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">LEADERSHIP.</h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">LEADERSHIP.</h2>
         </FadeUpReveal>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {team.map((member, i) => (
@@ -1617,7 +1617,7 @@ const PartnershipPhilosophy = () => (
     <div className="max-w-[1800px] mx-auto relative z-10 text-left">
       <FadeUpReveal>
         <div className="w-10 h-[2px] bg-[#E60000] mb-6" />
-        <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-black mb-8 max-w-4xl leading-[1.1]">
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-8 max-w-4xl leading-tight">
           WE DON'T JUST DISTRIBUTE.<br/><span className="text-[#E60000]">WE BUILD MARKETS.</span>
         </h2>
         <p className="text-lg text-gray-300 max-w-2xl leading-relaxed mb-10">Our philosophy goes beyond the simple transaction. When we introduce a global brand to the Indian market, we act as their local custodian—investing heavily in education, market awareness, and brand equity to guarantee long-term success.</p>
@@ -1635,7 +1635,7 @@ const FacilityShowcase = () => (
            <div className="w-10 h-[2px] bg-[#E60000]" />
            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Scale & Security</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">INFRASTRUCTURE.</h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">INFRASTRUCTURE.</h2>
       </FadeUpReveal>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-auto lg:h-[500px]">
         <FadeUpReveal delayOffset={100} className="radius-max overflow-hidden relative group h-[350px] lg:h-full cursor-pointer" data-cursor="hover">
@@ -1672,7 +1672,7 @@ const SustainabilityCommitment = () => (
     <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 text-left">
         <div className="lg:w-1/2">
           <FadeUpReveal>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-black mb-4 leading-[1.1]">COMMITTED TO A <br/>GREENER FUTURE.</h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-4 leading-tight">COMMITTED TO A <br/>GREENER FUTURE.</h2>
             <p className="text-white/90 text-base leading-relaxed max-w-xl">We are continuously optimizing our logistics to reduce our carbon footprint. From utilizing 100% recyclable packaging materials in our warehouse to deploying route-optimization AI for our delivery fleet.</p>
           </FadeUpReveal>
         </div>
@@ -1708,7 +1708,7 @@ const AwardsAndRecognitions = () => {
              <div className="w-10 h-[2px] bg-[#E60000]" />
              <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Industry Accolades</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-10">RECOGNITIONS.</h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-10 leading-tight">RECOGNITIONS.</h2>
         </FadeUpReveal>
         <div className="flex flex-wrap gap-4">
           {awards.map((award, i) => (
@@ -1733,7 +1733,7 @@ const CompanyCulture = () => (
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Life at ABK</span>
          </div>
-         <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-6">DRIVEN BY <span className="text-[#E60000]">PASSION.</span></h2>
+         <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">DRIVEN BY <span className="text-[#E60000]">PASSION.</span></h2>
          <p className="text-gray-600 text-lg max-w-3xl leading-relaxed">We are a collective of pet enthusiasts, supply chain experts, and brand builders. Our culture is rooted in continuous learning, radical ownership, and a shared mission to elevate animal welfare globally.</p>
       </FadeUpReveal>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[350px]">
@@ -1753,7 +1753,7 @@ const EmployeeBenefits = () => (
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Perks & Rewards</span>
          </div>
-         <h2 className="text-3xl md:text-5xl font-heading font-black mb-12">WHY JOIN <span className="text-[#E60000]">OUR TEAM.</span></h2>
+         <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-12 leading-tight">WHY JOIN <span className="text-[#E60000]">OUR TEAM.</span></h2>
       </FadeUpReveal>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
          {[
@@ -1790,7 +1790,7 @@ const OpenPositions = () => {
               <div className="w-10 h-[2px] bg-[#E60000]" />
               <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Opportunities</span>
            </div>
-           <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-10">OPEN <span className="text-[#E60000]">ROLES.</span></h2>
+           <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-10 leading-tight">OPEN <span className="text-[#E60000]">ROLES.</span></h2>
         </FadeUpReveal>
         <div className="flex flex-col gap-4">
           {jobs.map((job, i) => (
@@ -1821,7 +1821,7 @@ const PartnerApplicationProcess = () => (
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">For Global Brands</span>
          </div>
-         <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">BECOME A <span className="text-[#E60000]">DISTRIBUTION PARTNER.</span></h2>
+         <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">BECOME A <span className="text-[#E60000]">DISTRIBUTION PARTNER.</span></h2>
       </FadeUpReveal>
       <div className="flex flex-col lg:flex-row gap-10">
         {[
@@ -1847,7 +1847,7 @@ const SupplierStandards = () => (
     <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row gap-16 items-center">
       <div className="md:w-1/2">
         <FadeUpReveal>
-           <h2 className="text-4xl md:text-6xl font-heading font-black tracking-tighter mb-6 leading-[0.9]">UNCOMPROMISING<br/>STANDARDS.</h2>
+           <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-6 leading-tight">UNCOMPROMISING<br/>STANDARDS.</h2>
            <p className="text-white/90 text-base max-w-lg leading-relaxed mb-8">We expect our global partners to adhere to the highest ethical and manufacturing standards. ABK Imports maintains a zero-tolerance policy for unethical sourcing, unsustainable manufacturing, or unverified clinical claims.</p>
            <button className="border border-white/50 px-6 py-3 radius-max text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-[#E60000] transition-colors" data-cursor="hover">Read Supplier Code of Conduct</button>
         </FadeUpReveal>
@@ -1872,7 +1872,7 @@ const WorkspaceGallery = () => {
     <section className="py-20 bg-white overflow-hidden text-left border-y border-gray-100">
        <div className="px-[3vw] mb-10 max-w-[1800px] mx-auto">
          <FadeUpReveal>
-            <h2 className="text-2xl font-heading font-black text-[#111]">INSIDE ABK.</h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] leading-tight">INSIDE ABK.</h2>
          </FadeUpReveal>
        </div>
        <div className="flex animate-marquee whitespace-nowrap gap-4 w-max px-[3vw]">
@@ -1894,7 +1894,7 @@ const ContactLocations = () => (
            <div className="w-10 h-[2px] bg-[#E60000]" />
            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Our Network</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">REGIONAL <span className="text-[#E60000]">HUBS.</span></h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">REGIONAL <span className="text-[#E60000]">HUBS.</span></h2>
       </FadeUpReveal>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
@@ -1924,7 +1924,7 @@ const SupportMatrix = () => (
            <div className="w-10 h-[2px] bg-[#E60000]" />
            <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Directory</span>
         </div>
-        <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">DEPARTMENT <span className="text-[#E60000]">ROUTING.</span></h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">DEPARTMENT <span className="text-[#E60000]">ROUTING.</span></h2>
       </FadeUpReveal>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
@@ -1951,7 +1951,7 @@ const LiveSupport = () => (
     <div className="max-w-[1200px] mx-auto flex flex-col items-center">
       <FadeUpReveal>
         <Zap size={40} className="mb-6 mx-auto text-white/90" />
-        <h2 className="text-3xl md:text-5xl font-heading font-black tracking-tighter mb-5 leading-tight">24/7 PARTNER SUPPORT.</h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-5 leading-tight">24/7 PARTNER SUPPORT.</h2>
         <p className="text-lg text-white/90 leading-relaxed mb-8 max-w-2xl mx-auto">Existing B2B partners have round-the-clock access to our emergency logistics and technical support hotlines to ensure zero downtime in your retail operations.</p>
         <button className="bg-white text-[#E60000] px-8 py-4 radius-max font-bold text-xs uppercase tracking-widest hover:bg-black hover:text-white transition-colors" data-cursor="hover">Access Live Portal Support</button>
       </FadeUpReveal>
@@ -1971,7 +1971,7 @@ const FacilityTour = () => (
                <div className="w-10 h-[2px] bg-[#E60000]" />
                <span className="text-gray-400 font-medium tracking-widest uppercase text-xs">Experience Scale</span>
             </div>
-            <h2 className="text-3xl md:text-5xl font-heading font-black mb-6 leading-tight">BOOK A <span className="text-[#E60000]">FACILITY TOUR.</span></h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-6 leading-tight">BOOK A <span className="text-[#E60000]">FACILITY TOUR.</span></h2>
             <p className="text-gray-300 text-base leading-relaxed mb-8 max-w-xl">We invite our premier partners to walk the floor of our 150,000 sq ft climate-controlled Central Distribution Hub in Pune. Witness our automated fulfillment engine firsthand.</p>
             <button className="border border-white/30 text-white px-6 py-3 radius-max text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center gap-2 w-max" data-cursor="hover">Schedule Visit <ArrowRight size={16} /></button>
          </FadeUpReveal>
@@ -1985,7 +1985,7 @@ const WholesaleFastTrack = () => (
     <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
       <div className="md:w-1/2">
         <FadeUpReveal>
-          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-5 leading-tight">ENTERPRISE <br/><span className="text-[#E60000]">FAST-TRACK.</span></h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-5 leading-tight">ENTERPRISE <br/><span className="text-[#E60000]">FAST-TRACK.</span></h2>
           <p className="text-gray-600 text-base leading-relaxed mb-6 max-w-lg">For national retail chains, veterinary hospitals, and bulk distributors. Skip the standard onboarding queue and connect directly with our Enterprise Strategy Directors.</p>
         </FadeUpReveal>
       </div>
@@ -2006,7 +2006,7 @@ const WholesaleFastTrack = () => (
 const PartnerQuickLink = () => (
   <section className="py-20 bg-white px-[3vw] text-center border-t border-gray-100">
     <FadeUpReveal>
-      <h2 className="text-2xl md:text-3xl font-heading font-bold text-[#111] mb-4">Already part of the network?</h2>
+      <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-4 leading-tight">Already part of the network?</h2>
       <p className="text-gray-500 text-sm mb-8 max-w-xl mx-auto">Access real-time inventory, manage orders, and connect with your account manager through the digital hub.</p>
       <button className="bg-transparent border-2 border-[#111] text-[#111] px-8 py-3 radius-max font-bold hover:bg-[#111] hover:text-white transition-colors uppercase tracking-widest text-xs" data-cursor="hover">Log In to B2B Portal</button>
     </FadeUpReveal>
@@ -2029,7 +2029,7 @@ const BlogGrid = () => {
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Articles & Guides</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">LATEST <span className="text-[#E60000]">POSTS.</span></h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">LATEST <span className="text-[#E60000]">POSTS.</span></h2>
         </FadeUpReveal>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
           {blogs.map((blog, i) => (
@@ -2073,7 +2073,7 @@ const NewsInsightsGrid = () => {
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Media Center</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-heading font-black text-[#111] mb-12">COMPANY <span className="text-[#E60000]">UPDATES.</span></h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-12 leading-tight">COMPANY <span className="text-[#E60000]">UPDATES.</span></h2>
         </FadeUpReveal>
         <div className="flex flex-col gap-6">
           {news.map((item, i) => (
@@ -2102,7 +2102,7 @@ const ExpandedMissionVision = () => (
       <div className="lg:w-1/2">
         <FadeUpReveal>
           <h3 className="text-xs font-bold tracking-widest text-[#E60000] uppercase mb-5 flex items-center gap-3"><div className="w-6 h-[2px] bg-[#E60000]"></div>Purpose-Driven</h3>
-          <h2 className="text-3xl md:text-5xl font-heading font-black text-white mb-5 leading-tight">MORE THAN JUST <br/>A BUSINESS.</h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-white mb-5 leading-tight">MORE THAN JUST <br/>A BUSINESS.</h2>
           <p className="text-gray-300 text-lg leading-relaxed mb-8">At ABK Imports, our core mission transcends supply chain metrics. We exist to elevate the fundamental standard of animal welfare. By bridging the gap between global nutritional science and local accessibility, we ensure every pet has the opportunity to thrive.</p>
           <div className="grid grid-cols-2 gap-6 mt-10 border-t border-white/10 pt-10">
             <div>
@@ -2138,7 +2138,7 @@ const CSRExperiences = () => {
             <div className="w-10 h-[2px] bg-[#E60000]" />
             <span className="text-gray-500 font-medium tracking-widest uppercase text-xs">Voices from the Ground</span>
           </div>
-          <h2 className="text-2xl md:text-4xl font-heading font-black text-[#111] mb-16 max-w-4xl leading-tight">REAL IMPACT.<br/><span className="text-[#E60000]">REAL STORIES.</span></h2>
+          <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-16 max-w-4xl leading-tight">REAL IMPACT.<br/><span className="text-[#E60000]">REAL STORIES.</span></h2>
         </FadeUpReveal>
         
         <div className="flex flex-col gap-20">
@@ -2195,7 +2195,7 @@ const BrandPage = ({ brandId }) => {
       <section className="py-24 px-[3vw] bg-white">
          <div className="max-w-[1800px] mx-auto">
             <div className="max-w-3xl mb-16 text-left">
-               <h2 className="text-2xl md:text-4xl font-heading font-black mb-5">About {brand.title.replace('.', '')}</h2>
+               <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-6 leading-tight">About {brand.title.replace('.', '')}</h2>
                <p className="text-base text-gray-600 leading-relaxed">{brand.description}</p>
             </div>
             
@@ -2349,7 +2349,7 @@ const ContactPage = () => (
     <div className="bg-white py-24 px-[3vw] text-left">
       <div className="max-w-[1800px] mx-auto flex flex-col lg:flex-row gap-16">
          <div className="lg:w-1/3">
-            <h2 className="text-3xl font-heading font-black mb-5 text-[#111]">CONNECT.</h2>
+            <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter text-[#111] mb-6 leading-tight">CONNECT.</h2>
             <p className="text-gray-600 mb-10 leading-relaxed text-base">Reach out to our global headquarters in Pune or connect directly with our regional B2B support desks.</p>
             <div className="flex flex-col gap-6">
               <div>
@@ -2404,7 +2404,7 @@ const PreFooter = () => (
   <section className="py-24 bg-[#E60000] text-white text-left px-[3vw]">
     <div className="max-w-[1800px] mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
       <FadeUpReveal className="flex-1">
-        <h2 className="text-4xl md:text-6xl font-heading font-extrabold tracking-tighter mb-4 leading-tight">READY TO <br/>ELEVATE?</h2>
+        <h2 className="text-4xl md:text-5xl font-heading font-black tracking-tighter mb-4 leading-tight">READY TO <br/>ELEVATE?</h2>
         <p className="text-lg max-w-xl text-white/90">Join India's premier import and distribution partner network today.</p>
       </FadeUpReveal>
       <FadeUpReveal delayOffset={100}>
